@@ -160,14 +160,14 @@ function eqDataset(d) {
     <div class="sub">Cases</div>
     <table class="sec-table"><tr><th>ID</th><th>Kind</th><th>Cuisines</th><th class="num">Carb target</th><th>Activity</th><th>Exclusions</th><th>Prompt note</th><th>Source</th></tr>
       ${d.cases.map((c) => `<tr><td class="comp">${esc(c.id)}</td><td>${esc(c.kind)}</td><td>${esc(c.cuisines.join(", "))}</td><td class="num">${c.carb_target_g} g</td><td>${esc(c.activity || "")}</td><td>${esc(c.exclusions.join(", ") || "-")}</td><td>${esc(c.note || "-")}</td><td>${esc(c.source)}</td></tr>`).join("")}</table>
-    <p class="muted eq-small"><a href="/source/eval_cases.yaml" target="_blank" rel="noopener">Open eval_cases.yaml</a></p>`;
+    <p class="muted eq-small"><a href="source/eval_cases.yaml.html" target="_blank" rel="noopener">Open eval_cases.yaml</a></p>`;
 }
 function eqAssertions(d, ran) {
   return `<table class="sec-table"><tr><th>Check</th><th>Applies to</th><th class="num">Gate</th>${ran.map((m) => `<th class="num">${esc(m.label)}</th>`).join("")}</tr>
     ${d.gates.map((g) => `<tr><td><b>${esc(g.label)}</b><div class="muted comp">${esc(g.key)}</div></td><td>${esc(g.applies_to)}</td><td class="num">≥ ${Math.round(g.threshold * 100)}%</td>
       ${ran.map((m) => { const v = m.gate_rates[g.key]; const ok = v != null && v >= g.threshold;
         return `<td class="num"><span class="eq-gate ${v == null ? "" : ok ? "good" : "bad"}">${v == null ? "-" : Math.round(v * 100) + "%"}</span></td>`; }).join("")}</tr>`).join("")}</table>
-    <p class="muted eq-small">All checks are deterministic code checks; no LLM judge is used in this suite. <a href="/source/evals.py" target="_blank" rel="noopener">evals.py</a></p>`;
+    <p class="muted eq-small">All checks are deterministic code checks; no LLM judge is used in this suite. <a href="source/evals.py.html" target="_blank" rel="noopener">evals.py</a></p>`;
 }
 function eqHistory(ran) {
   return `<table class="sec-table"><tr><th>Run</th><th>Model</th><th>Created</th><th>Expires</th><th>Evidence</th><th class="num">Pass rate</th></tr>

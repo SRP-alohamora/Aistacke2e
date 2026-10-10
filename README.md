@@ -12,7 +12,11 @@ AiStackE2E: start with what you want to build, get the simplest production-ready
 | `Aistacke2e-Claudeopus5.5-PRD.md`, `Aistacke2e-Gemini3.8Flash-PRD.md` | Earlier PRD drafts |
 | `demo-gemini-001/`, `demo-mvp-gemini.md`, `gemini-mvp.md` | Gemini-built demo and notes |
 
-## Run the demo
+## Live demo
+
+https://srp-alohamora.github.io/Aistacke2e/ - runs fully in your browser (the Python backend runs on Pyodide), offline/simulated model only. First load takes about 10-20 s.
+
+## Run the demo locally
 
 ```bash
 cd demo-opus.001

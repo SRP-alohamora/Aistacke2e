@@ -46,6 +46,16 @@ compare simulated with measured evidence (`unverified`).
 | Whole Foods / Walmart costs | **Sample prices** (USD/kg in `aistack_demo/grocery.py`), not live quotes; links open each store's search page |
 | Health conditions / restrictions | Real, simplified rule mappings to ingredient exclusions (`restrictions.py`) |
 
+## GitHub Pages build
+
+`pages/build_pages.py` builds a static site; `pages/pyodide-bridge.js` loads Pyodide, installs FastAPI and routes every
+`fetch("/api/...")` to the same `aistack_demo.server` app running in the browser. Offline fixture mode only (no keys in the
+browser). Deployed by `.github/workflows/pages.yml` on push to `main`.
+
+```bash
+python pages/build_pages.py --out _site && python -m http.server -d _site 8090
+```
+
 ## Layout
 
 ```

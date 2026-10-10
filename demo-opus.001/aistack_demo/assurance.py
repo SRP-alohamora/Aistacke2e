@@ -17,8 +17,8 @@ def src(name: str, marker: str) -> str:
     """Link to the first line containing `marker` in a demo source file."""
     for i, line in enumerate(_lines(name), 1):
         if marker in line:
-            return f"/source/{name}#L{i}"
-    return f"/source/{name}"
+            return f"source/{name}.html#L{i}"
+    return f"source/{name}.html"
 
 
 def _g(text: str, file: str, marker: str, status: str = "enforced") -> dict:

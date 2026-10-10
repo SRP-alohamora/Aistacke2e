@@ -263,9 +263,10 @@ def enhancements(body: EnhanceIn) -> dict:
 @app.get("/source/{name}", response_class=HTMLResponse)
 def source(name: str) -> str:
     """Read-only view of a whitelisted demo source file, with line anchors for guardrail links."""
-    path = assurance.SOURCE_FILES.get(name)
+    path = assurance.SOURCE_FILES.get(name.removesuffix(".html"))
     if not path:
         raise HTTPException(404, "not a demo source file")
+    name = name.removesuffix(".html")
     rows = "".join(f'<tr id="L{i}"><td class="n"><a href="#L{i}">{i}</a></td><td><pre>{html.escape(line)}</pre></td></tr>'
                    for i, line in enumerate(path.read_text().splitlines(), 1))
     return f"""<!doctype html><html><head><meta charset="utf-8"><title>{html.escape(name)}</title>

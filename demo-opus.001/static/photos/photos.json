@@ -15,7 +15,7 @@
     "license": "CC BY 4.0",
     "license_url": "https://creativecommons.org/licenses/by/4.0",
     "artist": "Missvain",
-    "file": "/static/photos/burrito-bowl.jpg"
+    "file": "static/photos/burrito-bowl.jpg"
   },
   {
     "slug": "bibimbap",
@@ -33,7 +33,7 @@
     "license": "CC BY 2.0",
     "license_url": "https://creativecommons.org/licenses/by/2.0",
     "artist": "Chloe Lim",
-    "file": "/static/photos/bibimbap.jpg"
+    "file": "static/photos/bibimbap.jpg"
   },
   {
     "slug": "poke-bowl",
@@ -51,7 +51,7 @@
     "license": "CC0",
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
     "artist": "Andy Li",
-    "file": "/static/photos/poke-bowl.jpg"
+    "file": "static/photos/poke-bowl.jpg"
   },
   {
     "slug": "thai-noodles",
@@ -68,7 +68,7 @@
     "license": "CC BY 4.0",
     "license_url": "https://creativecommons.org/licenses/by/4.0",
     "artist": "P1898",
-    "file": "/static/photos/thai-noodles.jpg"
+    "file": "static/photos/thai-noodles.jpg"
   },
   {
     "slug": "palak-paneer",
@@ -84,7 +84,7 @@
     "license": "CC BY 2.0",
     "license_url": "https://creativecommons.org/licenses/by/2.0",
     "artist": "Daniel Zemans",
-    "file": "/static/photos/palak-paneer.jpg"
+    "file": "static/photos/palak-paneer.jpg"
   },
   {
     "slug": "chana-masala",
@@ -100,7 +100,7 @@
     "license": "CC0",
     "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
     "artist": "Andy Li",
-    "file": "/static/photos/chana-masala.jpg"
+    "file": "static/photos/chana-masala.jpg"
   },
   {
     "slug": "quinoa-salad",
@@ -117,7 +117,7 @@
     "license": "CC BY 4.0",
     "license_url": "https://creativecommons.org/licenses/by/4.0",
     "artist": "TorbeyCharbel",
-    "file": "/static/photos/quinoa-salad.jpg"
+    "file": "static/photos/quinoa-salad.jpg"
   },
   {
     "slug": "tofu-bowl",
@@ -134,7 +134,7 @@
     "license": "CC BY-SA 2.0",
     "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
     "artist": "Alpha from Melbourne, Australia",
-    "file": "/static/photos/tofu-bowl.jpg"
+    "file": "static/photos/tofu-bowl.jpg"
   },
   {
     "slug": "sweet-potato-bowl",
@@ -150,7 +150,7 @@
     "license": "CC BY 2.0",
     "license_url": "https://creativecommons.org/licenses/by/2.0",
     "artist": "Ella Olsson from Stockholm, Sweden",
-    "file": "/static/photos/sweet-potato-bowl.jpg"
+    "file": "static/photos/sweet-potato-bowl.jpg"
   },
   {
     "slug": "tacos",
@@ -167,7 +167,7 @@
     "license": "CC BY-SA 2.0",
     "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
     "artist": "Bernard DUPONT",
-    "file": "/static/photos/tacos.jpg"
+    "file": "static/photos/tacos.jpg"
   },
   {
     "slug": "buddha-bowl",
@@ -187,6 +187,6 @@
     "license": "CC BY-SA 4.0",
     "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
     "artist": "PizzaMan",
-    "file": "/static/photos/buddha-bowl.jpg"
+    "file": "static/photos/buddha-bowl.jpg"
   }
 ]

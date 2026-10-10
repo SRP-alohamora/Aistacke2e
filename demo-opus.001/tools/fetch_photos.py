@@ -93,7 +93,7 @@ def main() -> None:
                 continue
             (OUT / f"{theme['slug']}.jpg").write_bytes(img.content)
             library.append({**theme, **{k: v for k, v in found.items() if k != "thumb"},
-                            "file": f"/static/photos/{theme['slug']}.jpg"})
+                            "file": f"static/photos/{theme['slug']}.jpg"})
             print(f"ok   {theme['slug']}: {found['title']} ({found['license']})")
             time.sleep(2)
     (OUT / "photos.json").write_text(json.dumps(library, indent=2))
