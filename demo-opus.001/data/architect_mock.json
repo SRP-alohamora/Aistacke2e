@@ -1,0 +1,21 @@
+{
+  "_label": "MOCK - pre-rendered example of the Architect Mode import report for a fictional repo. Not produced by an importer.",
+  "repo": "northwind/support-assistant (fictional)",
+  "commit": "a1b2c3d",
+  "imported_at": "2026-10-08",
+  "inferred": [
+    {"layer": "Model", "component": "openai/gpt-6-astra", "confidence": "high", "signals": ["openai in uv.lock", "from openai import OpenAI in src/bot/llm.py"]},
+    {"layer": "Agent framework", "component": "langchain", "confidence": "high", "signals": ["langchain in uv.lock", "imports in src/bot/chain.py"]},
+    {"layer": "Retrieval store", "component": "pinecone", "confidence": "medium", "signals": ["PINECONE_API_KEY env var", "pinecone in requirements.txt"]},
+    {"layer": "Memory", "component": "custom (redis)", "confidence": "low", "signals": ["redis keys named chat_history:*"]},
+    {"layer": "Observability", "component": "unknown", "confidence": "unknown", "signals": ["no tracing library found"]}
+  ],
+  "findings": [
+    {"rule": "SEC-001", "severity": "critical", "file": "src/bot/config.py", "line": 12, "title": "Hard-coded API key pattern", "fix": "Move to a secret manager; rotate the key"},
+    {"rule": "REL-001", "severity": "high", "file": "src/bot/llm.py", "line": 31, "title": "LLM client constructed without timeout", "fix": "Set timeout from the contract (30 s)"},
+    {"rule": "TYP-001", "severity": "medium", "file": "src/bot/parse.py", "line": 8, "title": "json.loads on model output without schema validation", "fix": "Validate with a Pydantic contract"},
+    {"rule": "INJ-001", "severity": "high", "file": "src/bot/chain.py", "line": 54, "title": "Retrieved web content concatenated into system prompt", "fix": "Delimit untrusted content; add input guard"},
+    {"rule": "LCK-001", "severity": "info", "file": "src/bot/tools.py", "line": 20, "title": "Provider-specific tool-call format", "fix": "Move behind the ChatModel port"}
+  ],
+  "cost_note": "Cost per successful task: unknown until usage data is uploaded (P1)."
+}

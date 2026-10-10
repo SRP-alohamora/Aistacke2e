@@ -1,0 +1,4524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AiStackE2E — Google Style Demo (demo-gemini.001)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --google-blue: #1a73e8;
+      --google-blue-hover: #174ea6;
+      --google-blue-light: #e8f0fe;
+      --google-green: #1e8e3e;
+      --google-green-light: #e6f4ea;
+      --google-yellow: #f9ab00;
+      --google-yellow-light: #fef7e0;
+      --google-red: #d93025;
+      --google-red-light: #fce8e6;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --text-tertiary: #80868b;
+      --bg-page: #f8f9fa;
+      --bg-surface: #ffffff;
+      --border-color: #dadce0;
+      --border-light: #e8eaed;
+      --shadow-1: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+      --shadow-2: 0 2px 6px 2px rgba(60,64,67,0.15);
+      --shadow-3: 0 4px 12px rgba(60,64,67,0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Google-style App Bar */
+    .app-bar {
+      background: var(--bg-surface);
+      height: 64px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 2px rgba(60,64,67,0.08);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .g-blue { color: #4285f4; }
+    .g-red { color: #ea4335; }
+    .g-yellow { color: #fbbc05; }
+    .g-green { color: #34a853; }
+
+    .brand-badge {
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--google-blue-light);
+      color: var(--google-blue);
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.2px;
+    }
+
+    .app-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* In Prod Deployment Button */
+    .btn-prod-deploy {
+      background: var(--google-blue);
+      color: #ffffff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 3px rgba(26,115,232,0.3);
+    }
+
+    .btn-prod-deploy:hover {
+      background: var(--google-blue-hover);
+      box-shadow: 0 2px 6px rgba(26,115,232,0.4);
+    }
+
+    .btn-prod-deploy svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .btn-back-consumer {
+      background: #ffffff;
+      color: var(--google-blue);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-back-consumer:hover {
+      background: var(--google-blue-light);
+      border-color: var(--google-blue);
+    }
+
+    /* Main Container */
+    .content-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 32px auto;
+      padding: 0 24px;
+      flex: 1;
+    }
+
+    /* ============================================================== */
+    /* VIEW 1: PROGRESSIVE WIZARD (SPLIT START + SLOW TYPING)         */
+    /* ============================================================== */
+    #view-wizard {
+      max-width: 720px;
+      margin: 16px auto 40px auto;
+    }
+
+    .wizard-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      padding: 40px 48px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .wizard-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .step-indicator {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--google-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .step-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .step-dot {
+      width: 24px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border-color);
+      transition: background 0.3s;
+    }
+
+    .step-dot.active {
+      background: var(--google-blue);
+    }
+
+    .step-dot.completed {
+      background: var(--google-green);
+    }
+
+    .wizard-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .wizard-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* Dedicated App Choices Screen (Step 0) */
+    .app-choices-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .app-choice-card {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .app-choice-card:hover {
+      border-color: var(--google-blue);
+      background: #f8fafd;
+      box-shadow: 0 2px 8px rgba(26,115,232,0.12);
+    }
+
+    .app-choice-card.selected {
+      border-color: var(--google-blue);
+      background: var(--google-blue-light);
+      box-shadow: 0 2px 8px rgba(26,115,232,0.18);
+    }
+
+    .choice-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .choice-icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 1px 3px rgba(60,64,67,0.08);
+      flex-shrink: 0;
+    }
+
+    .choice-text-box h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .choice-text-box p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .choice-badge-pill {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--google-blue);
+      background: rgba(26,115,232,0.1);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .choice-radio-indicator {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .app-choice-card.selected .choice-radio-indicator {
+      border-color: var(--google-blue);
+      background: var(--google-blue);
+    }
+
+    .app-choice-card.selected .choice-radio-indicator::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+    }
+
+    /* Input Field Area */
+    .input-wrapper {
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .nlp-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .typing-status-pill {
+      font-size: 11px;
+      color: var(--google-blue);
+      background: var(--google-blue-light);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .google-input {
+      width: 100%;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+      background: var(--bg-surface);
+      line-height: 1.5;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      resize: vertical;
+    }
+
+    .google-input:focus {
+      border-color: var(--google-blue);
+      box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+    }
+
+    /* Product Requirements Document (PRD) Window (Step 5) */
+    .prd-document-window {
+      background: #ffffff;
+      border: 1.5px solid #d8dde6;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(60,64,67,0.08);
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .prd-doc-toolbar {
+      background: #f1f3f4;
+      border-bottom: 1px solid #d8dde6;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .prd-doc-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prd-dot-red, .prd-dot-yellow, .prd-dot-green {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .prd-dot-red { background: #ea4335; }
+    .prd-dot-yellow { background: #fbbc04; }
+    .prd-dot-green { background: #34a853; }
+
+    .prd-doc-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #202124;
+      font-family: 'SF Mono', Monaco, Menlo, Consolas, monospace;
+      letter-spacing: -0.2px;
+    }
+
+    .prd-doc-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: #e6f4ea;
+      color: #137333;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid #a8dab5;
+    }
+
+    .prd-doc-body {
+      background: #fdfefe;
+      padding: 0;
+    }
+
+    .prd-textarea {
+      width: 100%;
+      height: 380px;
+      padding: 18px 22px;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: #1f2937;
+      white-space: pre-wrap;
+      box-sizing: border-box;
+    }
+
+    /* Wizard Footer */
+    .wizard-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 10px 20px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-page);
+      color: var(--text-primary);
+    }
+
+    .btn-primary {
+      background: var(--google-blue);
+      border: none;
+      color: #ffffff;
+      padding: 10px 24px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--google-blue-hover);
+      box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+    }
+
+    /* ============================================================== */
+    /* VIEW 2: CONSUMER RECIPE APPLICATION VIEW                       */
+    /* ============================================================== */
+    #view-recipe-app {
+      display: none;
+    }
+
+    .app-context-banner {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 2px rgba(60,64,67,0.06);
+    }
+
+    .context-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .context-status {
+      font-size: 12px;
+      color: var(--google-green);
+      font-weight: 500;
+      background: var(--google-green-light);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .recipe-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .recipe-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Left Panel: Tunable Tiles */
+    .filter-panel {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      padding: 24px;
+      box-shadow: var(--shadow-1);
+      align-self: start;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .panel-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .filter-input {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 13px;
+      outline: none;
+      line-height: 1.4;
+    }
+
+    .filter-input:focus {
+      border-color: var(--google-blue);
+    }
+
+    /* Tunable Tile Grid */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tunable-tile {
+      background: var(--bg-page);
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tunable-tile:hover {
+      border-color: var(--google-blue);
+      background: #ffffff;
+    }
+
+    .tunable-tile.selected {
+      background: var(--google-blue-light);
+      border-color: var(--google-blue);
+    }
+
+    .tile-icon {
+      font-size: 18px;
+    }
+
+    .tile-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .tile-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .btn-generate-recipe {
+      width: 100%;
+      background: var(--google-blue);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(26,115,232,0.3);
+      transition: background 0.2s;
+    }
+
+    .btn-generate-recipe:hover {
+      background: var(--google-blue-hover);
+    }
+
+    /* Add Condition Button & Active Chips */
+    .btn-add-condition {
+      width: 100%;
+      margin-top: 10px;
+      background: #ffffff;
+      border: 1.5px dashed var(--google-blue);
+      color: var(--google-blue);
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-add-condition:hover {
+      background: var(--google-blue-light);
+      border-style: solid;
+    }
+
+    .active-conditions-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .condition-chip {
+      background: var(--google-blue-light);
+      color: var(--google-blue);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .condition-chip .remove-cond {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--google-red);
+    }
+
+    /* Right Main Panel: Recipe Photo & Card */
+    .recipe-display {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+      box-shadow: var(--shadow-1);
+    }
+
+    .recipe-hero-image {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      display: block;
+      background: #e8eaed;
+    }
+
+    .recipe-card-content {
+      padding: 32px;
+    }
+
+    .recipe-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 16px;
+    }
+
+    .recipe-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .recipe-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .badge-pill {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-safe {
+      background: var(--google-green-light);
+      color: var(--google-green);
+      font-weight: 600;
+    }
+
+    .badge-info {
+      background: var(--google-blue-light);
+      color: var(--google-blue);
+    }
+
+    .badge-neutral {
+      background: var(--bg-page);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-light);
+    }
+
+    .badge-budget {
+      background: #fef7e0;
+      color: #b06000;
+      border: 1px solid #fce8b2;
+      font-weight: 600;
+    }
+
+    /* Dynamic Budget Savings Callout Card */
+    .budget-savings-card {
+      background: #f6fbf7;
+      border: 1.5px solid #a8dab5;
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(30,142,62,0.08);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .savings-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .savings-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--google-green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .savings-badge {
+      background: #ceead6;
+      color: #137333;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    .savings-summary {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .savings-breakdown-list {
+      background: #ffffff;
+      border: 1px solid #ceead6;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .savings-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .savings-item:last-child {
+      border-bottom: none;
+    }
+
+    .savings-item-name {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .savings-pricing {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .price-wf {
+      color: #80868b;
+      font-size: 11px;
+    }
+
+    .price-wm {
+      color: #137333;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .savings-total-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      margin-top: 6px;
+      border-top: 1.5px dashed #ceead6;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .walmart-disclaimer {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
+    }
+
+    .tiny-walmart-link {
+      font-size: 11px;
+      color: #1a73e8;
+      text-decoration: underline;
+      margin-left: 4px;
+      font-weight: 500;
+    }
+
+    /* Store Tags */
+    .store-tag {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      margin-left: 6px;
+      transition: all 0.2s;
+    }
+
+    .wholefoods-tag {
+      background: #e6f4ea;
+      color: #137333;
+      border: 1px solid #ceead6;
+    }
+
+    .wholefoods-tag:hover {
+      background: #ceead6;
+    }
+
+    .walmart-tag {
+      background: #e8f0fe;
+      color: #1967d2;
+      border: 1px solid #aecbfa;
+    }
+
+    .walmart-tag:hover {
+      background: #d2e3fc;
+    }
+
+    .nutrition-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: var(--bg-page);
+      padding: 16px;
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
+      border: 1px solid var(--border-light);
+    }
+
+    .nutri-item {
+      text-align: center;
+    }
+
+    .nutri-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .nutri-val {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .section-subtitle {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ingredients-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .ingredient-item {
+      font-size: 13px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .ingredient-item::before {
+      content: '✓';
+      color: var(--google-green);
+      font-weight: 700;
+    }
+
+    .instructions-list {
+      margin-left: 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .instructions-list li {
+      margin-bottom: 8px;
+    }
+
+    .contract-guarantee {
+      margin-top: 24px;
+      padding: 12px 16px;
+      background: var(--google-green-light);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--google-green);
+      font-weight: 500;
+    }
+
+    /* ============================================================== */
+    /* VIEW 3: IN PROD DEPLOYMENT (LAYERED-CAKE UX)                   */
+    /* ============================================================== */
+    #view-in-prod {
+      display: none;
+    }
+
+    .prod-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .prod-title-group h2 {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .prod-title-group p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* FinOps & Contract HUD */
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .hud-tile {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: 0 1px 2px rgba(60,64,67,0.06);
+    }
+
+    .hud-tile-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .hud-tile-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .hud-tile-val.green { color: var(--google-green); }
+    .hud-tile-val.blue { color: var(--google-blue); }
+
+    /* Layered-Cake Stack */
+    .layers-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .cake-row {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 2px rgba(60,64,67,0.04);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .cake-row:hover {
+      border-color: var(--google-blue);
+      box-shadow: 0 2px 6px rgba(60,64,67,0.1);
+      transform: translateY(-1px);
+    }
+
+    .cake-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cake-badge-num {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-pill);
+      background: var(--google-blue-light);
+      color: var(--google-blue);
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cake-text h4 {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .cake-text p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .cake-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .component-tag {
+      background: #f1f3f4;
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .component-tag.highlight {
+      background: var(--google-blue-light);
+      border-color: #aecbfa;
+      color: var(--google-blue);
+    }
+
+    .cost-text {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--google-green);
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .btn-swap-google {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--google-blue);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+    }
+
+    .btn-swap-google:hover {
+      background: var(--google-blue-light);
+    }
+
+    /* Tabbed Inspector */
+    .tabs-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-1);
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 20px;
+    }
+
+    .tab-link {
+      background: none;
+      border: none;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .tab-link.active {
+      color: var(--google-blue);
+      border-bottom-color: var(--google-blue);
+    }
+
+    .code-box {
+      background: #202124;
+      color: #e8eaed;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(32,33,36,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      width: 680px;
+      max-width: 90vw;
+      padding: 28px;
+      box-shadow: var(--shadow-3);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-head h3 {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .modal-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .modal-table th, .modal-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-light);
+      text-align: left;
+    }
+
+    .modal-table th {
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .preset-chip-btn {
+      background: var(--bg-page);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-chip-btn:hover {
+      background: var(--google-blue-light);
+      border-color: var(--google-blue);
+      color: var(--google-blue);
+    }
+
+    /* ============================================================== */
+    /* VIEW 4: AGENTFORCE ENTERPRISE CUSTOMER SUPPORT APP UX          */
+    /* ============================================================== */
+    #view-support-app {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Salesforce / Agentforce Global Bar */
+    .agentforce-header {
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 6px;
+      padding: 10px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .sf-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sf-cloud-icon {
+      width: 32px;
+      height: 32px;
+      background: #0176d3;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 18px;
+    }
+
+    .sf-waffle {
+      font-size: 18px;
+      color: #706e6b;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .sf-app-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #032d60;
+      margin-right: 12px;
+    }
+
+    .sf-nav-tabs {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .sf-tab {
+      font-size: 13px;
+      font-weight: 500;
+      color: #706e6b;
+      text-decoration: none;
+      padding: 6px 0;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sf-tab.active {
+      color: #0176d3;
+      font-weight: 600;
+      border-bottom-color: #0176d3;
+    }
+
+    .sf-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .unique-case-id-pill {
+      background: #f3f3f3;
+      border: 1px solid #c9c7c5;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #080707;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.2px;
+    }
+
+    .unique-case-id-pill .case-box-icon {
+      font-size: 15px;
+    }
+
+    .btn-switch-app {
+      background: #ffffff;
+      border: 1px solid #0176d3;
+      color: #0176d3;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-switch-app:hover {
+      background: #eef4ff;
+    }
+
+    /* Case Banner Card (Matching Screenshot) */
+    .case-banner-card {
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 6px;
+      padding: 18px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .case-banner-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .case-title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .case-folder-icon {
+      width: 40px;
+      height: 40px;
+      background: #fdf3d8;
+      border: 1px solid #f6cf71;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .case-title-meta {
+      font-size: 12px;
+      color: #706e6b;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .case-main-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #080707;
+      margin-top: 2px;
+    }
+
+    .btn-follow {
+      background: #ffffff;
+      border: 1px solid #0176d3;
+      color: #0176d3;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-follow:hover {
+      background: #eef4ff;
+    }
+
+    .case-fields-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #eef4ff;
+    }
+
+    .case-summary-item .sum-label {
+      font-size: 11px;
+      color: #706e6b;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .case-summary-item .sum-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: #080707;
+      margin-top: 2px;
+    }
+
+    /* Chevron Progress Path (Path Bar) */
+    .slds-path {
+      display: flex;
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .path-step {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      position: relative;
+      background: #f3f3f3;
+      color: #444444;
+      border-right: 1px solid #ffffff;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .path-step.completed {
+      background: #027a48;
+      color: #ffffff;
+    }
+
+    .path-step.active {
+      background: #014486;
+      color: #ffffff;
+    }
+
+    .path-step.active::after {
+      content: '';
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 10px solid #014486;
+      z-index: 2;
+    }
+
+    /* Main Support Layout: Agentforce Left + Details Right */
+    .support-layout {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .support-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Agentforce Assistant Card */
+    .agentforce-card {
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(1, 118, 211, 0.12), 0 1px 3px rgba(0,0,0,0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .af-card-header {
+      background: linear-gradient(135deg, #0176d3 0%, #005fb2 100%);
+      color: #ffffff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .af-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .af-robot-icon {
+      width: 26px;
+      height: 26px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    .af-status-dot {
+      font-size: 11px;
+      color: #c0e8ff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    .af-chat-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: #f8fafd;
+      max-height: 640px;
+      overflow-y: auto;
+    }
+
+    .af-bubble-user {
+      align-self: flex-end;
+      background: #0176d3;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 16px 16px 2px 16px;
+      font-size: 13px;
+      max-width: 85%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .af-bubble-agent {
+      align-self: flex-start;
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 16px 16px 16px 2px;
+      padding: 18px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #080707;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      width: 100%;
+    }
+
+    .af-greeting-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #032d60;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .af-greeting-text {
+      color: #181818;
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    /* Auto-Detected Alert Box inside Chat */
+    .af-detection-box {
+      background: #fff8e6;
+      border: 1px solid #ffd066;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    .af-detection-head {
+      font-weight: 700;
+      color: #b25e00;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .af-detection-details {
+      color: #5a5a5a;
+      line-height: 1.4;
+    }
+
+    .af-consent-prompt {
+      background: #f0f7ff;
+      border-left: 3px solid #0176d3;
+      padding: 12px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+      color: #080707;
+      margin-bottom: 16px;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    /* Action Buttons in Agentforce Card */
+    .af-actions-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-af-primary {
+      background: #0176d3;
+      color: #ffffff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 2px 4px rgba(1, 118, 211, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-af-primary:hover {
+      background: #0b5cab;
+      box-shadow: 0 3px 8px rgba(1, 118, 211, 0.4);
+    }
+
+    .btn-af-secondary {
+      background: #ffffff;
+      color: #0176d3;
+      border: 1.5px solid #0176d3;
+      padding: 11px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-af-secondary:hover {
+      background: #eef4ff;
+    }
+
+    /* Recommendations Interactive Expand Container */
+    .af-recommendations-panel {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #d8dde6;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .rec-item {
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+    }
+
+    .rec-item-title {
+      font-weight: 700;
+      color: #032d60;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .rec-item-desc {
+      color: #5a5a5a;
+      line-height: 1.4;
+    }
+
+    .btn-apply-resolution {
+      width: 100%;
+      background: #027a48;
+      color: #ffffff;
+      border: none;
+      padding: 11px;
+      border-radius: 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-apply-resolution:hover {
+      background: #0b6138;
+    }
+
+    /* Human Handoff Drawer / Alert */
+    .af-human-handoff-alert {
+      background: #fdf3d8;
+      border: 1px solid #ffd066;
+      border-radius: 6px;
+      padding: 14px;
+      margin-top: 12px;
+      font-size: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Prompt Input Footer in Agentforce */
+    .af-chat-footer {
+      padding: 12px 16px;
+      background: #ffffff;
+      border-top: 1px solid #d8dde6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .af-chat-input {
+      flex: 1;
+      border: 1px solid #c9c7c5;
+      border-radius: 18px;
+      padding: 8px 14px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .af-chat-input:focus {
+      border-color: #0176d3;
+    }
+
+    .af-btn-send {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #0176d3;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    /* Right Column: Case Details Form */
+    .case-details-card {
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .details-tabs-header {
+      background: #f3f3f3;
+      border-bottom: 1px solid #d8dde6;
+      display: flex;
+      padding: 0 16px;
+    }
+
+    .details-tab-btn {
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #706e6b;
+      border: none;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+    }
+
+    .details-tab-btn.active {
+      color: #0176d3;
+      background: #ffffff;
+      border-bottom-color: #0176d3;
+    }
+
+    .details-form-content {
+      padding: 24px;
+    }
+
+    .slds-section-header {
+      background: #eef4ff;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #032d60;
+      margin-bottom: 16px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slds-section-header:first-of-type {
+      margin-top: 0;
+    }
+
+    .slds-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .slds-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .slds-form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .slds-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #5a5a5a;
+    }
+
+    .slds-input {
+      border: 1px solid #c9c7c5;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #080707;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .slds-input:focus {
+      border-color: #0176d3;
+      box-shadow: 0 0 0 1px #0176d3;
+    }
+
+    .slds-input[readonly] {
+      background: #f9f9f9;
+      color: #444444;
+    }
+
+    .slds-select {
+      border: 1px solid #c9c7c5;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #080707;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .slds-textarea {
+      border: 1px solid #c9c7c5;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #080707;
+      background: #ffffff;
+      outline: none;
+      resize: vertical;
+      line-height: 1.4;
+    }
+
+    .prefilled-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #0176d3;
+      background: #eef4ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+
+    /* Diagnostic Telemetry Code Box */
+    .telemetry-code-box {
+      background: #0b1325;
+      color: #7ce38b;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 11.5px;
+      border-radius: 4px;
+      padding: 12px;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    /* Bottom-Right Floating Agentforce Pill (From Screenshot) */
+    .floating-piper-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0176d3;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 28px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(1, 118, 211, 0.4);
+      cursor: pointer;
+      z-index: 999;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .floating-piper-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(1, 118, 211, 0.5);
+    }
+
+    /* Populating Live Banner (Item 2) */
+    .populating-live-banner {
+      background: #eef4ff;
+      border: 1px solid #c0d7ff;
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #014486;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .populating-live-banner.completed {
+      background: #e6f4ea;
+      border-color: #a8dab5;
+      color: #137333;
+    }
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0176d3;
+      box-shadow: 0 0 0 rgba(1, 118, 211, 0.4);
+      animation: pulseAnim 1.4s infinite;
+      flex-shrink: 0;
+    }
+
+    .populating-live-banner.completed .pulse-dot {
+      background: #1e8e3e;
+      animation: none;
+    }
+
+    @keyframes pulseAnim {
+      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(1, 118, 211, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(1, 118, 211, 0); }
+      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(1, 118, 211, 0); }
+    }
+
+    .field-glow {
+      animation: fieldPopulateGlow 0.9s ease;
+    }
+
+    @keyframes fieldPopulateGlow {
+      0% { background-color: #e8f0fe; border-color: #0176d3; box-shadow: 0 0 0 2px rgba(1,118,211,0.25); }
+      100% { background-color: #ffffff; border-color: #c9c7c5; box-shadow: none; }
+    }
+
+    /* Root Cause Analysis (RCA) Card (Item 4) */
+    .rca-card {
+      background: #ffffff;
+      border: 1.5px solid #0176d3;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 14px;
+      box-shadow: 0 4px 14px rgba(1, 118, 211, 0.12);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .rca-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eef4ff;
+    }
+
+    .rca-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #032d60;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rca-pill {
+      background: #e6f4ea;
+      color: #137333;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    .rca-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .rca-block {
+      background: #f8fafd;
+      border: 1px solid #d8dde6;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+
+    .rca-block-head {
+      font-weight: 700;
+      color: #080707;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rca-block-desc {
+      color: #4b5563;
+      line-height: 1.45;
+    }
+
+    .rca-metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .rca-metric-item .m-lbl {
+      font-size: 10.5px;
+      color: #166534;
+      font-weight: 500;
+    }
+
+    .rca-metric-item .m-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #15803d;
+      margin-top: 2px;
+    }
+
+    /* Activity Tab Styling (Item 6) */
+    .activity-timeline {
+      padding: 6px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .timeline-entry {
+      display: flex;
+      gap: 14px;
+      position: relative;
+    }
+
+    .timeline-entry::before {
+      content: '';
+      position: absolute;
+      left: 17px;
+      top: 36px;
+      bottom: -14px;
+      width: 2px;
+      background: #e5e7eb;
+    }
+
+    .timeline-entry:last-child::before {
+      display: none;
+    }
+
+    .timeline-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #eef4ff;
+      border: 2px solid #0176d3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .timeline-icon-box.success {
+      background: #e6f4ea;
+      border-color: #137333;
+    }
+
+    .timeline-icon-box.alert {
+      background: #fce8e6;
+      border-color: #c5221f;
+    }
+
+    .timeline-content-box {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 6px;
+      padding: 10px 14px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    .timeline-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .timeline-entry-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #032d60;
+    }
+
+    .timeline-time {
+      font-size: 11px;
+      color: #706e6b;
+      font-family: monospace;
+    }
+
+    .timeline-desc {
+      font-size: 12px;
+      color: #4b5563;
+      line-height: 1.45;
+    }
+
+    /* AI Chain of Thought Chatter & Diagnosis Flowchart (Item 7) */
+    .chatter-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 4px 0;
+    }
+
+    .cot-thought-card {
+      background: #f8fafd;
+      border: 1px solid #c9dfff;
+      border-left: 4px solid #0176d3;
+      border-radius: 6px;
+      padding: 16px;
+    }
+
+    .cot-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #032d60;
+      margin-bottom: 12px;
+    }
+
+    .cot-step-item {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #d8dde6;
+    }
+
+    .cot-step-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .cot-step-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #014486;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .cot-step-body {
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    /* Diagnosis Flowchart */
+    .diagnosis-flowchart-card {
+      background: #ffffff;
+      border: 1px solid #d8dde6;
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .flowchart-head {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #032d60;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flow-steps-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flow-node {
+      width: 100%;
+      background: #f8fafd;
+      border: 1.5px solid #0176d3;
+      border-radius: 6px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(1, 118, 211, 0.08);
+      transition: transform 0.2s;
+    }
+
+    .flow-node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(1, 118, 211, 0.15);
+    }
+
+    .flow-node.alert-node {
+      border-color: #ea4335;
+      background: #fff5f5;
+    }
+
+    .flow-node.success-node {
+      border-color: #137333;
+      background: #f0fdf4;
+    }
+
+    .flow-node-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flow-node-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #0176d3;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .flow-node.alert-node .flow-node-num {
+      background: #ea4335;
+    }
+
+    .flow-node.success-node .flow-node-num {
+      background: #137333;
+    }
+
+    .flow-node-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #080707;
+    }
+
+    .flow-node-sub {
+      font-size: 11px;
+      color: #5a5a5a;
+    }
+
+    .flow-node-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #eef4ff;
+      color: #0176d3;
+    }
+
+    .flow-node.alert-node .flow-node-badge {
+      background: #fce8e6;
+      color: #c5221f;
+    }
+
+    .flow-node.success-node .flow-node-badge {
+      background: #e6f4ea;
+      color: #137333;
+    }
+
+    .flow-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 16px;
+      justify-content: center;
+    }
+
+    .flow-arrow-down {
+      width: 2px;
+      height: 10px;
+      background: #0176d3;
+      position: relative;
+    }
+
+    .flow-arrow-down::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: -3px;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid #0176d3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Google Style App Bar -->
+  <header class="app-bar">
+    <div class="brand-section">
+      <div class="brand-logo">
+        <span class="g-blue">A</span><span class="g-red">i</span><span class="g-yellow">S</span><span class="g-blue">t</span><span class="g-green">a</span><span class="g-red">c</span><span class="g-blue">k</span>
+        <span style="color: var(--text-primary); font-weight: 600; margin-left: 2px;">E2E</span>
+      </div>
+      <div class="brand-badge">Gemini 1.5 Flash Native</div>
+    </div>
+
+    <div class="app-bar-actions">
+      <!-- In Prod Deployment Trigger (Hidden while wizard questions are being asked) -->
+      <button class="btn-prod-deploy" id="btn-toggle-prod" style="display: none;" onclick="toggleProdDeployment()">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span>In Prod Deployment</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="content-container">
+
+    <!-- ============================================================== -->
+    <!-- VIEW 1: PROGRESSIVE WIZARD (SPLIT START + SLOW TYPING)         -->
+    <!-- ============================================================== -->
+    <div id="view-wizard">
+      <div class="wizard-card">
+        
+        <div class="wizard-stepper">
+          <div class="step-indicator" id="step-label">Step 1 of 6: Choose Application Template</div>
+          <div class="step-dots">
+            <div class="step-dot active" id="dot-0"></div>
+            <div class="step-dot" id="dot-1"></div>
+            <div class="step-dot" id="dot-2"></div>
+            <div class="step-dot" id="dot-3"></div>
+            <div class="step-dot" id="dot-4"></div>
+            <div class="step-dot" id="dot-5"></div>
+          </div>
+        </div>
+
+        <!-- SCREEN 0: SPLIT APP CHOICES SCREEN -->
+        <div id="wizard-step-0">
+          <h2 class="wizard-title">Select an Application Template</h2>
+          <p class="wizard-description">Pick an AI architecture starting point. AiStackE2E will recommend the simplest viable contracts and infrastructure.</p>
+
+          <div class="app-choices-grid">
+            <!-- Choice 1: Restricted diet fusion Recipe -->
+            <div class="app-choice-card" id="choice-recipe" onclick="selectAppChoice('diabetic')">
+              <div class="choice-left">
+                <div class="choice-icon-circle">🥗</div>
+                <div class="choice-text-box">
+                  <span class="choice-badge-pill">Clinical Health & Culinary AI</span>
+                  <h3>Restricted diet fusion Recipe</h3>
+                  <p>Recommends glycemic-safe (GI &le; 55) fusion meals from pantry items with clinical Pydantic contract validation.</p>
+                </div>
+              </div>
+              <div class="choice-radio-indicator"></div>
+            </div>
+
+            <!-- Choice 2: Enterprise Support Modernization -->
+            <div class="app-choice-card selected" id="choice-support" onclick="selectAppChoice('support')">
+              <div class="choice-left">
+                <div class="choice-icon-circle">🏢</div>
+                <div class="choice-text-box">
+                  <span class="choice-badge-pill">Enterprise FinOps & Modernization</span>
+                  <h3>Enterprise Customer Support Modernization</h3>
+                  <p>Triages 500k tickets/mo, routing simple inquiries to TypeSafe JEV ($0.042/M) and cutting inference spend by 93%.</p>
+                </div>
+              </div>
+              <div class="choice-radio-indicator"></div>
+            </div>
+          </div>
+
+          <div class="wizard-footer">
+            <div></div>
+            <button class="btn-primary" onclick="goToStep(1)">
+              <span>Next</span> →
+            </button>
+          </div>
+        </div>
+
+        <!-- SCREEN 1: NLP PROMPT TEXT BOX (QUESTION 1) -->
+        <div id="wizard-step-1" style="display: none;">
+          <h2 class="wizard-title">What application do you want to build?</h2>
+          <p class="wizard-description">Describe your core product intent. AiStackE2E parses domain requirements and risks.</p>
+
+          <div class="input-wrapper">
+            <div class="nlp-label">
+              <span>Natural Language Intent Prompt (NLP):</span>
+              <span class="typing-status-pill" id="typing-pill-1">⚡ Populating Intent...</span>
+            </div>
+            <textarea class="google-input" id="q1-input" rows="3" placeholder="Describe what you want to build..."></textarea>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-secondary" onclick="goToStep(0)">← Back</button>
+            <button class="btn-primary" onclick="goToStep(2)">
+              <span>Next</span> →
+            </button>
+          </div>
+        </div>
+
+        <!-- SCREEN 2: QUESTION 2 (PERSONA) -->
+        <div id="wizard-step-2" style="display: none;">
+          <h2 class="wizard-title">Who will use it?</h2>
+          <p class="wizard-description">Define the target users, domain personas, and access boundaries.</p>
+
+          <div class="input-wrapper">
+            <div class="nlp-label">
+              <span>Target User Persona:</span>
+              <span class="typing-status-pill" id="typing-pill-2">⚡ Populating Persona...</span>
+            </div>
+            <input type="text" class="google-input" id="q2-input" placeholder="Enter target user persona...">
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-secondary" onclick="goToStep(1)">← Back</button>
+            <button class="btn-primary" onclick="goToStep(3)">
+              <span>Next</span> →
+            </button>
+          </div>
+        </div>
+
+        <!-- SCREEN 3: QUESTION 3 (GOALS & CONSTRAINTS) -->
+        <div id="wizard-step-3" style="display: none;">
+          <h2 class="wizard-title">What should the application achieve?</h2>
+          <p class="wizard-description">Specify clinical/business safety limits, quality targets, and contract bounds.</p>
+
+          <div class="input-wrapper">
+            <div class="nlp-label">
+              <span>Architectural Goals & Safety Constraints:</span>
+              <span class="typing-status-pill" id="typing-pill-3">⚡ Populating Constraints...</span>
+            </div>
+            <textarea class="google-input" id="q3-input" rows="3" placeholder="Enter constraints and achievements..."></textarea>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-secondary" onclick="goToStep(2)">← Back</button>
+            <button class="btn-primary" onclick="goToStep(4)">
+              <span>Next</span> →
+            </button>
+          </div>
+        </div>
+
+        <!-- SCREEN 4: QUESTION 4 (ADDITIONAL EXPERIENCE, TIPS & GUIDANCE) -->
+        <div id="wizard-step-4" style="display: none;">
+          <h2 class="wizard-title">4th Q. additional experience, tips ,guidance :</h2>
+          <p class="wizard-description">Specify layout preferences, photo placement, tunable filter tiles, and ingredient search controls.</p>
+
+          <div class="input-wrapper">
+            <div class="nlp-label">
+              <span>Experience, Tips & Guidance Prompt:</span>
+              <span class="typing-status-pill" id="typing-pill-4">⚡ Typing in slow pace...</span>
+            </div>
+            <textarea class="google-input" id="q4-input" rows="4" placeholder="Enter additional experience, tips, and guidance..."></textarea>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-secondary" onclick="goToStep(3)">← Back</button>
+            <button class="btn-primary" onclick="goToStep(5)">
+              <span>Next</span> →
+            </button>
+          </div>
+        </div>
+
+        <!-- SCREEN 5: PRODUCT REQUIREMENTS DOCUMENT (PRD) -->
+        <div id="wizard-step-5" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div>
+              <h2 class="wizard-title" style="margin-bottom: 4px;">Product Requirements Document (PRD)</h2>
+              <p class="wizard-description" style="margin-bottom: 12px;">Auto-synthesized architectural PRD compiled from intent questions 1–4, establishing problem statement, target customer, goals, and contracts.</p>
+            </div>
+            <span class="typing-status-pill" id="typing-pill-5" style="margin-top: 4px;">⚡ Typing PRD Specification...</span>
+          </div>
+
+          <div class="prd-document-window">
+            <div class="prd-doc-toolbar">
+              <div class="prd-doc-dots">
+                <span class="prd-dot-red"></span>
+                <span class="prd-dot-yellow"></span>
+                <span class="prd-dot-green"></span>
+              </div>
+              <div class="prd-doc-title" id="prd-doc-filename">📄 PRD_Enterprise_Customer_Support_v1.0.md</div>
+              <span class="prd-doc-badge">✓ AI Architecture Spec</span>
+            </div>
+            <div class="prd-doc-body">
+              <textarea class="prd-textarea" id="q5-prd-textarea" readonly placeholder="Generating PRD specifications..."></textarea>
+            </div>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-secondary" onclick="goToStep(4)">← Back</button>
+            <button class="btn-primary" onclick="finishWizard()">
+              <span>Generate Application & Contracts</span> 🚀
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 2: CONSUMER RECIPE APPLICATION VIEW                       -->
+    <!-- ============================================================== -->
+    <div id="view-recipe-app">
+      
+      <!-- Context Banner -->
+      <div class="app-context-banner">
+        <div class="context-title">
+          <span>🥗</span>
+          <span>Restricted diet fusion Recipe</span>
+        </div>
+        <div class="context-status">
+          <span>●</span>
+          <span>Pydantic v2 Contract Active · Gemini 1.5 Flash Serving</span>
+        </div>
+      </div>
+
+      <div class="recipe-layout">
+        
+        <!-- Left Panel: Tunable Tiles & Controls -->
+        <div class="filter-panel">
+          <h3 class="panel-title">Recipe Controls</h3>
+          <p class="panel-subtitle">Tune dietary safety boundaries and available pantry inventory.</p>
+
+          <div class="filter-group">
+            <label class="filter-label">Enter ingredients available to find select recipes:</label>
+            <input type="text" class="filter-input" id="ingredients-input" placeholder="enter engradients available to find select recipes" value="Wild salmon, black beans, cauliflower rice, avocado, lime, garlic">
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Tunable Dietary Tiles:</label>
+            <div class="tiles-grid">
+              <div class="tunable-tile selected" id="tile-organic" onclick="toggleGenericTile(this)">
+                <div class="tile-icon">🌿</div>
+                <div class="tile-name">Organic</div>
+                <div class="tile-desc">Non-GMO whole food</div>
+              </div>
+
+              <!-- Budget Friendly: NOT SELECTED BY DEFAULT -->
+              <div class="tunable-tile" id="tile-budget" onclick="toggleBudgetTile(this)">
+                <div class="tile-icon">💰</div>
+                <div class="tile-name">Budget Friendly</div>
+                <div class="tile-desc">&lt; $5 per serving</div>
+              </div>
+
+              <div class="tunable-tile selected" id="tile-quick" onclick="toggleGenericTile(this)">
+                <div class="tile-icon">⚡</div>
+                <div class="tile-name">Quick Prep</div>
+                <div class="tile-desc">&lt; 25 minutes</div>
+              </div>
+
+              <div class="tunable-tile selected" id="tile-lowgi" onclick="toggleGenericTile(this)">
+                <div class="tile-icon">🩺</div>
+                <div class="tile-name">Strict Low GI</div>
+                <div class="tile-desc">Glycemic Index &le; 35</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary Find & Verify Button -->
+          <button class="btn-generate-recipe" onclick="regenerateRecipe()">
+            <span>✨ Find & Verify Recipes</span>
+          </button>
+
+          <!-- Button to Add Another Restriction -->
+          <button class="btn-add-condition" id="btn-add-condition" onclick="openConditionModal()">
+            <span>+ Add another restriction / health condition</span>
+          </button>
+
+          <!-- Active Conditions Container -->
+          <div class="active-conditions-wrapper" id="active-conditions-wrapper">
+            <span class="condition-chip">Type-2 Diabetes (GI &le; 55)</span>
+          </div>
+        </div>
+
+        <!-- Right Main Panel: Picture & Recipe Card -->
+        <div class="recipe-display">
+          <!-- Real Gourmet Recipe Photograph -->
+          <img src="recipe_photo.jpg" alt="Restricted Diet Fusion Salmon Bowl" class="recipe-hero-image" id="recipe-img">
+          
+          <div class="recipe-card-content">
+            <div class="recipe-header-row">
+              <h2 class="recipe-title" id="recipe-title-text">Citrus-Seared Wild Salmon with Cuban Black Beans & Cauliflower Rice</h2>
+            </div>
+
+            <div class="recipe-badges" id="recipe-badges-container">
+              <span class="badge-pill badge-safe">✓ Glycemic Index: 32 (Safe)</span>
+              <span class="badge-pill badge-info">Net Carbs: 8.5g</span>
+              <span class="badge-pill badge-neutral">Prep Time: 22 Mins</span>
+              <span class="badge-pill badge-neutral">Calories: 420 kcal</span>
+              <span class="badge-pill badge-safe">Pydantic Schema: Verified</span>
+            </div>
+
+            <!-- Dynamic Budget Savings Card (Visible when Budget Friendly is Selected) -->
+            <div class="budget-savings-card" id="budget-savings-banner" style="display: none;">
+              <div class="savings-card-header">
+                <div class="savings-title">
+                  <span class="savings-icon">💰</span>
+                  <strong>Budget-Friendly Optimization: Save $5.70 on this meal!</strong>
+                </div>
+                <span class="savings-badge">63% Lower Cost</span>
+              </div>
+              <p class="savings-summary">
+                AiStackE2E checked dietary equivalence contracts across retailers. You can substitute Whole Foods items with Walmart options while strictly maintaining glycemic index &le; 55 and zero refined sugars:
+              </p>
+              <div class="savings-breakdown-list">
+                <div class="savings-item">
+                  <div class="savings-item-name">🐟 Wild Alaskan Salmon Fillet (200g):</div>
+                  <div class="savings-pricing">
+                    <span class="price-wf"><del>Whole Foods: $8.99</del></span>
+                    <span style="color: #5f6368; font-size: 11px;">→</span>
+                    <span class="price-wm">Walmart Fresh: $3.29</span>
+                    <a href="https://www.walmart.com/browse/food/fresh-seafood/976759_9569502" target="_blank" class="tiny-walmart-link">walmart.com</a>
+                  </div>
+                </div>
+                <div class="savings-item">
+                  <div class="savings-item-name">🫘 Black Beans & Cauliflower (Pantry):</div>
+                  <div class="savings-pricing">
+                    <span class="price-wf"><del>Whole Foods: $3.89</del></span>
+                    <span style="color: #5f6368; font-size: 11px;">→</span>
+                    <span class="price-wm">Great Value at Walmart: $1.88</span>
+                    <a href="https://www.walmart.com/browse/food/canned-beans/976759_976787_1001429" target="_blank" class="tiny-walmart-link">walmart.com</a>
+                  </div>
+                </div>
+                <div class="savings-total-bar">
+                  <span>Total Recipe Cost:</span>
+                  <span><del style="color:#80868b;font-weight:400;">$12.88 at Whole Foods</del> ➔ <strong style="color: #1e8e3e; font-size: 15px;">$5.17 at Walmart</strong> (Save $7.71)</span>
+                </div>
+              </div>
+              <div class="walmart-disclaimer">
+                <span>Option considered: Great Value Wild Alaskan Pink Salmon (Frozen / Fresh Pack).</span>
+                <a href="https://www.walmart.com" target="_blank" class="tiny-walmart-link">Shop ingredients at Walmart →</a>
+              </div>
+            </div>
+
+            <div class="nutrition-strip">
+              <div class="nutri-item">
+                <div class="nutri-label">Calories</div>
+                <div class="nutri-val">420</div>
+              </div>
+              <div class="nutri-item">
+                <div class="nutri-label">Protein</div>
+                <div class="nutri-val">38.5g</div>
+              </div>
+              <div class="nutri-item">
+                <div class="nutri-label">Net Carbs</div>
+                <div class="nutri-val">8.5g</div>
+              </div>
+              <div class="nutri-item">
+                <div class="nutri-label">Glycemic Index</div>
+                <div class="nutri-val" style="color: var(--google-green);">32 / 100</div>
+              </div>
+            </div>
+
+            <h4 class="section-subtitle">Ingredients from Inventory:</h4>
+            <ul class="ingredients-list">
+              <!-- Salmon Fillet with Hyperlinks -->
+              <li class="ingredient-item" id="item-salmon">
+                <strong>200g Wild Alaskan Salmon Fillet</strong>
+                <span id="salmon-pricing-box">
+                  <a href="https://www.wholefoodsmarket.com" target="_blank" class="store-tag wholefoods-tag">Whole Foods: $8.99</a>
+                </span>
+              </li>
+              <li class="ingredient-item">1/2 cup Organic Black Beans</li>
+              <li class="ingredient-item">1.5 cups Grated Cauliflower Rice</li>
+              <li class="ingredient-item">1/2 Hass Avocado (Diced)</li>
+              <li class="ingredient-item">1 tbsp Extra Virgin Olive Oil</li>
+              <li class="ingredient-item">Fresh Lime & Minced Garlic</li>
+            </ul>
+
+            <h4 class="section-subtitle">Cooking Instructions:</h4>
+            <ol class="instructions-list">
+              <li>Season salmon with sea salt, cumin, and cracked black pepper. Sear skin-down in olive oil for 4 minutes until crisp.</li>
+              <li>Simmer seasoned black beans with minced garlic and a squeeze of fresh lime juice over medium-low heat.</li>
+              <li>Lightly saute cauliflower rice for 3 minutes with fresh cilantro; plate in a bowl, topping with seared salmon, beans, and diced avocado.</li>
+            </ol>
+
+            <div class="contract-guarantee">
+              <span>🛡️</span>
+              <span><strong>AiStackE2E Contract Guarantee:</strong> Verified zero added sugars, net carbs &lt; 10g, and GI &le; 55. Enforced via Pydantic v2.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 4: CUSTOMER SUPPORT WITH SUPER INTELLIGENT GENIUSES UX     -->
+    <!-- ============================================================== -->
+    <div id="view-support-app">
+      
+      <!-- Enterprise Support Navigation Header -->
+      <div class="agentforce-header">
+        <div class="sf-brand-group">
+          <div class="sf-cloud-icon">☁</div>
+          <div class="sf-waffle" title="App Launcher">⠿</div>
+          <div class="sf-app-title">Public Sector</div>
+          <div class="sf-nav-tabs">
+            <span class="sf-tab active">Home</span>
+            <span class="sf-tab">Cases</span>
+            <span class="sf-tab">Knowledge</span>
+            <span class="sf-tab">Customer Support with Super intelligent geniuses Studio</span>
+          </div>
+        </div>
+
+        <div class="sf-header-right">
+          <!-- Unique Case ID Generated in Top Corner -->
+          <div class="unique-case-id-pill" id="unique-case-id-badge" title="Unique Case Identifier">
+            <span class="case-box-icon">🗄️</span>
+            <span id="unique-case-id-text">00001958 | Case</span>
+          </div>
+
+          <!-- In Prod Deployment Trigger (Customer Support Architecture) -->
+          <button class="btn-prod-deploy" style="padding: 6px 14px; font-size: 13px;" onclick="openProdDeploymentFromSupport()">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span>In Prod Deployment</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Case Highlight Banner -->
+      <div class="case-banner-card">
+        <div class="case-banner-top">
+          <div class="case-title-area">
+            <div class="case-folder-icon">📁</div>
+            <div>
+              <div class="case-title-meta">Case</div>
+              <h2 class="case-main-title">Payment Webhook Latency & 429 Rate Limit Incident</h2>
+            </div>
+          </div>
+          <button class="btn-follow" id="btn-follow-toggle" onclick="toggleFollow()">
+            <span>+ Follow</span>
+          </button>
+        </div>
+
+        <div class="case-fields-summary">
+          <div class="case-summary-item">
+            <div class="sum-label">Case Number</div>
+            <div class="sum-val" id="banner-case-num">00001958</div>
+          </div>
+          <div class="case-summary-item">
+            <div class="sum-label">Investigator</div>
+            <div class="sum-val">Super intelligent genius AI (Tier-1)</div>
+          </div>
+          <div class="case-summary-item">
+            <div class="sum-label">Priority</div>
+            <div class="sum-val" style="color: #ea4335;">High (P1 - Production)</div>
+          </div>
+          <div class="case-summary-item">
+            <div class="sum-label">Current Status</div>
+            <div class="sum-val" id="banner-status-text" style="color: #0176d3;">Working (Under AI Investigation)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chevron Progress Ribbon (Path Bar from Screenshot) -->
+      <div class="slds-path">
+        <div class="path-step completed" id="path-complaint">
+          <span>✓ Complaint</span>
+        </div>
+        <div class="path-step active" id="path-investigation">
+          <span>Investigation</span>
+        </div>
+        <div class="path-step" id="path-proceeding">
+          <span>Proceeding</span>
+        </div>
+        <div class="path-step" id="path-resolution">
+          <span>Resolution</span>
+        </div>
+      </div>
+
+      <!-- Support Main Split Layout -->
+      <div class="support-layout">
+        
+        <!-- Left Column: Customer Support with Super intelligent geniuses Card -->
+        <div class="agentforce-card">
+          <div class="af-card-header">
+            <div class="af-header-brand">
+              <div class="af-robot-icon">🧠</div>
+              <span>Customer Support with Super intelligent geniuses</span>
+            </div>
+            <div class="af-status-dot">
+              <span>●</span>
+              <span>Autonomous Active</span>
+            </div>
+          </div>
+
+          <div class="af-chat-body" id="af-chat-container">
+            <!-- User Telemetry Ingress Message -->
+            <div class="af-bubble-user">
+              <span>Show me auto-detected telemetry & incident report for current usecase</span>
+            </div>
+
+            <!-- Customer Support Guidance & Greeting -->
+            <div class="af-bubble-agent">
+              <div class="af-greeting-title">
+                <span>🤖</span>
+                <span>Welcome to Enterprise Customer Support</span>
+              </div>
+              
+              <p class="af-greeting-text">
+                <strong>Welcome James</strong>, based on the issues I have auto detected that you are facing in your current usecase, I have pre-filled some of the sections .
+              </p>
+
+              <!-- Auto-Detected Telemetry Box -->
+              <div class="af-detection-box">
+                <div class="af-detection-head">
+                  <span>⚠️</span>
+                  <span>Auto-Detected Anomaly: 147 HTTP 429 Rate Limit Errors</span>
+                </div>
+                <div class="af-detection-details">
+                  Upstream LLM token bucket throttle exceeded on <code>/api/v1/support/triage-webhook</code>. P95 latency degraded from 340ms to 1,840ms. Zero data loss detected.
+                </div>
+              </div>
+
+              <!-- Exact Guidance Prompt -->
+              <div class="af-consent-prompt">
+                "Please review for accuracy. With your consent, I have a few suggestions to resolve the issue, these are non-intrusive and non-disruptive. please press continue on <strong>"Yes, try proposed recommendations "</strong>. if you would like to talk to a human representative press <strong>'continue to human on the loop'</strong> ."
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="af-actions-group">
+                <button class="btn-af-primary" id="btn-try-recs" onclick="tryRecommendations()">
+                  <span>✨</span>
+                  <span>Yes, try proposed recommendations</span>
+                </button>
+                <button class="btn-af-secondary" id="btn-human-loop" onclick="continueToHumanLoop()">
+                  <span>👤</span>
+                  <span>continue to human on the loop</span>
+                </button>
+              </div>
+
+              <!-- Expandable Recommendations Panel -->
+              <div class="af-recommendations-panel" id="af-recommendations-panel" style="display: none;">
+                <div style="font-weight: 700; color: #032d60; margin-bottom: 10px; font-size: 13px;">
+                  ⚡ Proposed Non-Intrusive & Non-Disruptive Recommendations:
+                </div>
+
+                <div class="rec-item">
+                  <div class="rec-item-title">
+                    <span>1.</span>
+                    <span>Route Tier-1 Triage to TypeSafe JEV System-1 Engine</span>
+                  </div>
+                  <div class="rec-item-desc">
+                    Re-route classification & status inquiries away from heavy LLMs to JEV ($0.042/M tokens, 120ms latency), shedding 93% of upstream token consumption immediately.
+                  </div>
+                </div>
+
+                <div class="rec-item">
+                  <div class="rec-item-title">
+                    <span>2.</span>
+                    <span>Enable In-Memory Adaptive Token Bucket Rate Limiter</span>
+                  </div>
+                  <div class="rec-item-desc">
+                    Buffer burst webhook volume with 120ms cache fallback for duplicate idempotency keys without dropping any customer transactions.
+                  </div>
+                </div>
+
+                <div class="rec-item">
+                  <div class="rec-item-title">
+                    <span>3.</span>
+                    <span>Enforce Pydantic v2 Contract Guard</span>
+                  </div>
+                  <div class="rec-item-desc">
+                    Strict validation of webhook payloads to guarantee 99.8% schema conformance SLA with zero runtime downtime or code refactoring.
+                  </div>
+                </div>
+
+                <button class="btn-apply-resolution" id="btn-apply-resolution-now" onclick="applyResolution()">
+                  <span>🚀 Apply Non-Disruptive Resolution Now</span>
+                </button>
+              </div>
+
+              <!-- Human Handoff Alert Panel -->
+              <div class="af-human-handoff-alert" id="af-human-alert" style="display: none;">
+                <div style="font-weight: 700; color: #b25e00; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                  <span>👤</span>
+                  <span>Human Representative Engaged</span>
+                </div>
+                <div style="color: #444444; line-height: 1.4;">
+                  Connecting James to Senior Enterprise Support Architect <strong>Sarah Chen</strong>. Diagnostic telemetry packet, Case <span id="handoff-case-num">00001958</span>, and 147 auto-detected trace logs dispatched.
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Prompt Input (Super Intelligent Genius Style) -->
+          <div class="af-chat-footer">
+            <input type="text" class="af-chat-input" id="af-chat-input-field" placeholder="do you have any additional questions?" onkeydown="if(event.key==='Enter') sendAfChat()">
+            <button class="af-btn-send" onclick="sendAfChat()">➤</button>
+          </div>
+        </div>
+
+        <!-- Right Column: Case Details & Intelligence (Tabs) -->
+        <div class="case-details-card">
+          <div class="details-tabs-header">
+            <button class="details-tab-btn active" id="tab-btn-details" onclick="switchRightTab('details')">Details</button>
+            <button class="details-tab-btn" id="tab-btn-activity" onclick="switchRightTab('activity')">Activity</button>
+            <button class="details-tab-btn" id="tab-btn-chatter" onclick="switchRightTab('chatter')">Chatter</button>
+          </div>
+
+          <!-- TAB 1: DETAILS (WITH LIVE POPULATING ANIMATION) -->
+          <div id="tab-content-details" class="details-form-content">
+            <!-- Populating Live Banner -->
+            <div class="populating-live-banner" id="populating-banner">
+              <div class="pulse-dot"></div>
+              <span id="populating-banner-text" style="flex: 1;">⚡ Auto-detecting incident telemetry & populating Case Details for James...</span>
+              <button onclick="animateDetailsPopulation()" style="background: rgba(1,118,211,0.08); border: 1px solid currentColor; border-radius: 4px; padding: 3px 9px; font-size: 11px; cursor: pointer; color: inherit; font-weight: 600; display: flex; align-items: center; gap: 4px;" title="Re-simulate auto-populating fields live">↻ Re-run Live Fill</button>
+            </div>
+
+            <!-- Section 1: Information -->
+            <div class="slds-section-header">
+              <span>📋</span>
+              <span>Information</span>
+            </div>
+
+            <div class="slds-form-grid">
+              <div class="slds-form-group">
+                <label class="slds-label">
+                  Case Number <span class="prefilled-badge" id="badge-case-num">✓ Auto-Generated</span>
+                </label>
+                <input type="text" class="slds-input" id="case-num-input" readonly value="00001958">
+              </div>
+
+              <div class="slds-form-group">
+                <label class="slds-label">Status</label>
+                <select class="slds-select" id="case-status-select">
+                  <option value="Working" selected>Working (Under AI Investigation)</option>
+                  <option value="Resolved">Resolved via JEV & Pydantic</option>
+                  <option value="Escalated">Escalated to Human in the Loop</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+
+              <div class="slds-form-group">
+                <label class="slds-label">Case Owner</label>
+                <input type="text" class="slds-input" id="case-owner-input" readonly value="Super intelligent genius AI (Tier-1)">
+              </div>
+
+              <div class="slds-form-group">
+                <label class="slds-label">Priority</label>
+                <select class="slds-select" id="case-priority-select">
+                  <option selected>High (P1 - Production Impact)</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Section 2: Description -->
+            <div class="slds-section-header">
+              <span>📝</span>
+              <span>Description</span>
+            </div>
+
+            <div class="slds-form-grid">
+              <div class="slds-form-group">
+                <label class="slds-label">
+                  Category <span class="prefilled-badge" id="badge-category">✓ Auto-Detected</span>
+                </label>
+                <input type="text" class="slds-input" id="case-category-input" readonly value="API Rate Limit & Webhook Latency Spike">
+              </div>
+
+              <div class="slds-form-group">
+                <label class="slds-label">Case Subject</label>
+                <input type="text" class="slds-input" id="case-subject-input" value="Payment Webhook 429 Rate Limit Throttling during Concurrency Burst">
+              </div>
+
+              <div class="slds-form-group full-width">
+                <label class="slds-label">
+                  Description <span class="prefilled-badge" id="badge-desc">✓ Auto-Populated from Telemetry</span>
+                </label>
+                <textarea class="slds-textarea" rows="3" id="case-desc-textarea">Auto-detected telemetry incident: Customer application experienced 147 HTTP 429 rate limit exceptions over the last 15 minutes. Latency degraded from 340ms to 1,840ms. Upstream LLM provider throttle reached. Zero data loss detected.</textarea>
+              </div>
+            </div>
+
+            <!-- Section 3: Contact Information -->
+            <div class="slds-section-header">
+              <span>👤</span>
+              <span>Contact Information</span>
+            </div>
+
+            <div class="slds-form-grid">
+              <div class="slds-form-group">
+                <label class="slds-label">Contact Name</label>
+                <input type="text" class="slds-input" readonly value="James Miller">
+              </div>
+
+              <div class="slds-form-group">
+                <label class="slds-label">Account Name</label>
+                <input type="text" class="slds-input" readonly value="James's Enterprise Workspace (AiStack Production)">
+              </div>
+
+              <div class="slds-form-group">
+                <label class="slds-label">Email</label>
+                <input type="text" class="slds-input" readonly value="james@enterprise.corp">
+              </div>
+
+              <div class="slds-form-group">
+                <label class="slds-label">SLA Tier</label>
+                <input type="text" class="slds-input" readonly value="Premier Mission-Critical (24/7 SLA)">
+              </div>
+            </div>
+
+            <!-- Section 4: Live Diagnostic Telemetry -->
+            <div class="slds-section-header">
+              <span>⚡</span>
+              <span>Auto-Detected Diagnostic Telemetry</span>
+            </div>
+
+            <div class="telemetry-code-box" id="telemetry-box">
+[INCIDENT LOG] 18:42:10 UTC - HTTP 429 Too Many Requests (147 occurrences)
+Upstream Provider: openai.ChatCompletion / gpt-4o (TPS limit: 10,000 TPM exceeded)
+Impacted Microservice: POST /api/v1/support/triage-webhook
+P95 Latency: 1,840ms (Baseline: 340ms) · Degradation: +441%
+Pydantic v2 Contract Status: Enforced (Zero payload corruption)
+AiStack Recommendation: Route System-1 Triage to TypeSafe JEV ($0.042/M tokens)
+            </div>
+
+          </div>
+
+          <!-- TAB 2: ACTIVITY (INCIDENT ACTIVITY TIMELINE) -->
+          <div id="tab-content-activity" style="display: none; padding: 20px;">
+            <div class="slds-section-header" style="margin-top: 0;">
+              <span>⏱️</span>
+              <span>Incident Activity Timeline & Audit Trail</span>
+            </div>
+
+            <div class="activity-timeline">
+              <div class="timeline-entry" id="activity-entry-resolved" style="display: none;">
+                <div class="timeline-icon-box success">✅</div>
+                <div class="timeline-content-box">
+                  <div class="timeline-top-row">
+                    <div class="timeline-entry-title" style="color: #137333;">Non-Disruptive Resolution Deployed Successfully</div>
+                    <div class="timeline-time">18:42:35 UTC</div>
+                  </div>
+                  <div class="timeline-desc">TypeSafe JEV System-1 Triage active. Webhook queue drained. Latency restored to 120ms (P95). Error rate: 0.00%.</div>
+                </div>
+              </div>
+
+              <div class="timeline-entry">
+                <div class="timeline-icon-box">💡</div>
+                <div class="timeline-content-box">
+                  <div class="timeline-top-row">
+                    <div class="timeline-entry-title">Super Intelligent Genius Proposed 3 Solutions</div>
+                    <div class="timeline-time">18:42:25 UTC</div>
+                  </div>
+                  <div class="timeline-desc">Generated non-disruptive recommendations: JEV fallback routing, token bucket rate limiter, and Pydantic v2 contract guard submitted for James's consent.</div>
+                </div>
+              </div>
+
+              <div class="timeline-entry">
+                <div class="timeline-icon-box success">📐</div>
+                <div class="timeline-content-box">
+                  <div class="timeline-top-row">
+                    <div class="timeline-entry-title">Pydantic v2 Contract Validation Verified</div>
+                    <div class="timeline-time">18:42:18 UTC</div>
+                  </div>
+                  <div class="timeline-desc">Analyzed 50 payload samples against contract schema. 100% schema conformance pass; ruled out client corrupted payload bugs.</div>
+                </div>
+              </div>
+
+              <div class="timeline-entry">
+                <div class="timeline-icon-box">📋</div>
+                <div class="timeline-content-box">
+                  <div class="timeline-top-row">
+                    <div class="timeline-entry-title">Case Auto-Generated & Fields Pre-filled for James</div>
+                    <div class="timeline-time">18:42:14 UTC</div>
+                  </div>
+                  <div class="timeline-desc">Case ID created, Priority escalated to P1 (High), and telemetry trace attached to James Miller's production workspace.</div>
+                </div>
+              </div>
+
+              <div class="timeline-entry">
+                <div class="timeline-icon-box alert">🚨</div>
+                <div class="timeline-content-box">
+                  <div class="timeline-top-row">
+                    <div class="timeline-entry-title" style="color: #c5221f;">Telemetry Anomaly: 147 HTTP 429 Errors Detected</div>
+                    <div class="timeline-time">18:42:10 UTC</div>
+                  </div>
+                  <div class="timeline-desc">Sudden concurrency burst on <code>/api/v1/support/triage-webhook</code> exceeded upstream LLM TPM quota. P95 latency degraded to 1,840ms.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: CHATTER (INTELLIGENT CONTEXT CHATTER & DIAGNOSIS FLOWCHART) -->
+          <div id="tab-content-chatter" style="display: none; padding: 20px;">
+            <div class="chatter-container">
+
+              <!-- Diagnosis Flowchart -->
+              <div class="diagnosis-flowchart-card">
+                <div class="flowchart-head">
+                  <span>🗺️</span>
+                  <span>Diagnostic Investigation Flowchart</span>
+                </div>
+
+                <div class="flow-steps-wrapper">
+                  <div class="flow-node">
+                    <div class="flow-node-content">
+                      <div class="flow-node-num">1</div>
+                      <div>
+                        <div class="flow-node-title">Webhook Ingestion Spike</div>
+                        <div class="flow-node-sub">Burst traffic: 45 req/sec across payment webhooks</div>
+                      </div>
+                    </div>
+                    <span class="flow-node-badge">T = 0s</span>
+                  </div>
+
+                  <div class="flow-connector"><div class="flow-arrow-down"></div></div>
+
+                  <div class="flow-node alert-node">
+                    <div class="flow-node-content">
+                      <div class="flow-node-num">2</div>
+                      <div>
+                        <div class="flow-node-title">HTTP 429 RateLimitError Detected</div>
+                        <div class="flow-node-sub">147 failures in 15m · P95 latency spiked to 1,840ms</div>
+                      </div>
+                    </div>
+                    <span class="flow-node-badge">Critical</span>
+                  </div>
+
+                  <div class="flow-connector"><div class="flow-arrow-down"></div></div>
+
+                  <div class="flow-node">
+                    <div class="flow-node-content">
+                      <div class="flow-node-num">3</div>
+                      <div>
+                        <div class="flow-node-title">Pydantic v2 Contract Validation</div>
+                        <div class="flow-node-sub">Ingress payloads verified 100% schema valid (not a client bug)</div>
+                      </div>
+                    </div>
+                    <span class="flow-node-badge">100% Pass</span>
+                  </div>
+
+                  <div class="flow-connector"><div class="flow-arrow-down"></div></div>
+
+                  <div class="flow-node">
+                    <div class="flow-node-content">
+                      <div class="flow-node-num">4</div>
+                      <div>
+                        <div class="flow-node-title">AI Chain of Thought Analysis</div>
+                        <div class="flow-node-sub">Identified 93% tickets are low-complexity deterministic triage</div>
+                      </div>
+                    </div>
+                    <span class="flow-node-badge">AI Reasoned</span>
+                  </div>
+
+                  <div class="flow-connector"><div class="flow-arrow-down"></div></div>
+
+                  <div class="flow-node success-node">
+                    <div class="flow-node-content">
+                      <div class="flow-node-num">5</div>
+                      <div>
+                        <div class="flow-node-title">Remediation: Route System-1 to TypeSafe JEV</div>
+                        <div class="flow-node-sub">Bypass heavy LLMs ($0.042/M tokens, 120ms latency)</div>
+                      </div>
+                    </div>
+                    <span class="flow-node-badge">Prescribed</span>
+                  </div>
+
+                  <div class="flow-connector"><div class="flow-arrow-down"></div></div>
+
+                  <div class="flow-node success-node">
+                    <div class="flow-node-content">
+                      <div class="flow-node-num">6</div>
+                      <div>
+                        <div class="flow-node-title">Telemetry Normalized to 120ms</div>
+                        <div class="flow-node-sub">Zero 429 errors · 93% cost savings · SLA guaranteed</div>
+                      </div>
+                    </div>
+                    <span class="flow-node-badge">Resolved</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Intelligent Context Chatter (Chain of Thought) -->
+              <div class="cot-thought-card">
+                <div class="cot-head">
+                  <span>🧠</span>
+                  <span>Intelligent Context Chatter: Super Intelligent Genius Chain of Thought</span>
+                </div>
+
+                <div class="cot-step-item">
+                  <div class="cot-step-title">
+                    <span>Step 1: Signal Ingestion & Anomaly Recognition</span>
+                  </div>
+                  <div class="cot-step-body">
+                    "Detected 147 HTTP 429 exceptions logged by microservice <code>/api/v1/support/triage-webhook</code> within 15 minutes. Latency degraded from 340ms baseline to 1,840ms. Rule engine flagged production degradation; auto-initiated Tier-1 investigation."
+                  </div>
+                </div>
+
+                <div class="cot-step-item">
+                  <div class="cot-step-title">
+                    <span>Step 2: Differential Root-Cause Diagnosis</span>
+                  </div>
+                  <div class="cot-step-body">
+                    "Checked database connection pools: healthy. Checked upstream network transit: healthy. Ran Pydantic v2 schema inspection on failed requests: schemas 100% compliant. Concluded: the root cause is upstream OpenAI GPT-4o Token-Per-Minute (TPM) quota exhaustion under unexpected 45 req/sec burst."
+                  </div>
+                </div>
+
+                <div class="cot-step-item">
+                  <div class="cot-step-title">
+                    <span>Step 3: Workload Complexity Classification</span>
+                  </div>
+                  <div class="cot-step-body">
+                    "Analyzed the query payloads. 93% of requests are simple status checks, order lookups, and category triages that do NOT require generative reasoning. Dispatching 100% of traffic to GPT-4o was burning excessive tokens ($18.50/M) and throttling the service."
+                  </div>
+                </div>
+
+                <div class="cot-step-item">
+                  <div class="cot-step-title">
+                    <span>Step 4: Non-Intrusive Architectural Synthesis</span>
+                  </div>
+                  <div class="cot-step-body">
+                    "Synthesized non-disruptive solution: 1) Divert 93% of queries to TypeSafe JEV System-1 engine ($0.042/M, 120ms); 2) Add local token bucket buffer for duplicate idempotency keys; 3) Keep Pydantic v2 contract guard active. Pre-filled Case for James Miller and requested consent."
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Floating Pill (Customer Support with Super intelligent geniuses) -->
+      <div class="floating-piper-pill" onclick="focusSupportChat()">
+        <span style="font-size: 18px;">🧠</span>
+        <span>Customer Support with Super intelligent geniuses</span>
+      </div>
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 3: IN PROD DEPLOYMENT (LAYERED-CAKE UX)                   -->
+    <!-- ============================================================== -->
+    <div id="view-in-prod">
+      <div class="prod-header">
+        <div class="prod-title-group">
+          <h2 id="prod-header-title">Architecture Control Plane & Contracts</h2>
+          <p id="prod-header-subtitle">Real-time production topology, Pydantic contracts, and normalized unit economics.</p>
+        </div>
+        <button class="btn-back-consumer" id="btn-back-from-prod" onclick="returnFromProdDeployment()">
+          ← Back to Consumer App
+        </button>
+      </div>
+
+      <!-- HUD -->
+      <div class="hud-grid">
+        <div class="hud-tile">
+          <div class="hud-tile-title">Unit Cost</div>
+          <div class="hud-tile-val green" id="hud-unit-cost">$0.77 / 1kST</div>
+        </div>
+        <div class="hud-tile">
+          <div class="hud-tile-title">Contract Safety</div>
+          <div class="hud-tile-val blue">100% Pydantic v2</div>
+        </div>
+        <div class="hud-tile">
+          <div class="hud-tile-title">Schema Conformance</div>
+          <div class="hud-tile-val green">99.8% Pass SLA</div>
+        </div>
+        <div class="hud-tile">
+          <div class="hud-tile-title">P95 Latency</div>
+          <div class="hud-tile-val" id="hud-latency-val">340 ms</div>
+        </div>
+      </div>
+
+      <!-- Layered-Cake Stack -->
+      <div class="layers-stack">
+        <!-- Layer 1 -->
+        <div class="cake-row" onclick="openSwapModal('api')">
+          <div class="cake-left">
+            <div class="cake-badge-num">1</div>
+            <div class="cake-text">
+              <h4>Ingestion & API Layer</h4>
+              <p id="cake-layer1-desc">Type-safe asynchronous REST endpoint</p>
+            </div>
+          </div>
+          <div class="cake-right">
+            <div class="component-tag" id="tag-api">FastAPI (Python 3.12)</div>
+            <div class="cost-text">$0.12 / 1k</div>
+            <button class="btn-swap-google">Inspect</button>
+          </div>
+        </div>
+
+        <!-- Layer 2 -->
+        <div class="cake-row" onclick="openSwapModal('router')">
+          <div class="cake-left">
+            <div class="cake-badge-num">2</div>
+            <div class="cake-text">
+              <h4>System-1 Decision Router</h4>
+              <p id="cake-layer2-desc">Non-autoregressive deterministic triage & safety gating</p>
+            </div>
+          </div>
+          <div class="cake-right">
+            <div class="component-tag highlight" id="tag-router">TypeSafe AI JEV ($0.042/M)</div>
+            <div class="cost-text" id="cost-router-val">$0.03 / 1k</div>
+            <button class="btn-swap-google">Swap</button>
+          </div>
+        </div>
+
+        <!-- Layer 3 -->
+        <div class="cake-row" onclick="openSwapModal('model')">
+          <div class="cake-left">
+            <div class="cake-badge-num">3</div>
+            <div class="cake-text">
+              <h4>Foundation Reasoning Model</h4>
+              <p id="cake-layer3-desc">Structured generation with clinical nutrition nuance</p>
+            </div>
+          </div>
+          <div class="cake-right">
+            <div class="component-tag highlight" id="tag-model">Google Gemini 1.5 Flash</div>
+            <div class="cost-text" id="cost-model-val">$0.38 / 1k</div>
+            <button class="btn-swap-google">Swap</button>
+          </div>
+        </div>
+
+        <!-- Layer 4 -->
+        <div class="cake-row" onclick="openSwapModal('contracts')">
+          <div class="cake-left">
+            <div class="cake-badge-num">4</div>
+            <div class="cake-text">
+              <h4>Canonical Contract Rail</h4>
+              <p id="cake-layer4-desc">Input/Output schemas and clinical boundary validation</p>
+            </div>
+          </div>
+          <div class="cake-right">
+            <div class="component-tag" id="tag-contracts">Pydantic v2 Strict Models</div>
+            <div class="cost-text">$0.00</div>
+            <button class="btn-swap-google">Inspect</button>
+          </div>
+        </div>
+
+        <!-- Layer 5 -->
+        <div class="cake-row" onclick="openSwapModal('storage')">
+          <div class="cake-left">
+            <div class="cake-badge-num">5</div>
+            <div class="cake-text">
+              <h4>Knowledge & Retrieval Storage</h4>
+              <p id="cake-layer5-desc">Pantry inventory & glycemic index lookup</p>
+            </div>
+          </div>
+          <div class="cake-right">
+            <div class="component-tag" id="tag-storage">PostgreSQL 16 (pgvector)</div>
+            <div class="cost-text">$0.24 / 1k</div>
+            <button class="btn-swap-google">Inspect</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabbed Code & Evals -->
+      <div class="tabs-card">
+        <div class="tab-nav">
+          <button class="tab-link active" onclick="switchCakeTab('tab-pydantic')">📜 Pydantic v2 Schema</button>
+          <button class="tab-link" onclick="switchCakeTab('tab-evals')">🧪 Synthetic Test Runner</button>
+          <button class="tab-link" onclick="switchCakeTab('tab-scaffold')">🚀 Scaffolding Code</button>
+        </div>
+
+        <!-- Tab 1: Pydantic -->
+        <div id="tab-pydantic" class="tab-pane">
+          <div class="code-box" id="cake-pydantic-code">
+from pydantic import BaseModel, Field, conint, confloat, constr
+from typing import List, Literal
+
+class NutritionalBreakdown(BaseModel):
+    calories: conint(ge=50, le=2000)
+    protein_grams: confloat(ge=0.0)
+    carbohydrates_grams: confloat(ge=0.0)
+    fiber_grams: confloat(ge=0.0)
+    net_carbs_grams: confloat(ge=0.0)
+    glycemic_index_estimate: conint(ge=0, le=100) = Field(
+        ..., description="Must be <= 55 for diabetic safety."
+    )
+
+class DiabeticRecipeResponseContract(BaseModel):
+    recipe_id: str
+    title: constr(min_length=5, max_length=120)
+    cuisine_fusion: str
+    preparation_time_minutes: conint(ge=5, le=180)
+    nutrition: NutritionalBreakdown
+    clinical_safety_verified: bool = Field(
+        ..., description="Affirmation that recipe meets diabetic nutritional bounds."
+    )
+          </div>
+        </div>
+
+        <!-- Tab 2: Synthetic Evals -->
+        <div id="tab-evals" class="tab-pane" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+              <strong>Behavioral Regression Verification (20 Synthetic Boundary Cases)</strong>
+              <div style="font-size: 12px; color: var(--text-secondary);">Testing GI &le; 55 adherence, schema integrity, and latency across providers.</div>
+            </div>
+            <button class="btn-primary" id="btn-run-evals" onclick="runRegressionTests()">▶ Run 20 Tests</button>
+          </div>
+          <div class="code-box" id="eval-log" style="height: 180px;">
+[SYSTEM] Ready to verify contract compatibility.
+[SYSTEM] Target Stack: Google Gemini 1.5 Flash + TypeSafe AI JEV Router.
+[SYSTEM] Click "Run 20 Tests" to execute behavioral verification...
+          </div>
+        </div>
+
+        <!-- Tab 3: Scaffolding -->
+        <div id="tab-scaffold" class="tab-pane" style="display: none;">
+          <div class="code-box" id="cake-scaffold-code">
+from fastapi import FastAPI, HTTPException
+from app.contracts import DiabeticRecipeResponseContract, RecipeRequestContract
+from app.adapters.gemini_adapter import GeminiFlashAdapter
+from app.adapters.jev_router import JEVDecisionRouter
+
+app = FastAPI(title="Restricted Diet Fusion Recipe Service")
+gemini = GeminiFlashAdapter()
+jev = JEVDecisionRouter()
+
+@app.post("/v1/recipes/generate", response_model=DiabeticRecipeResponseContract)
+async def generate_recipe(request: RecipeRequestContract):
+    # Step 1: System-1 Fast Triage via JEV ($0.042/M tokens, 120ms)
+    triage = await jev.evaluate_contraindications(request.ingredients_on_hand)
+    if not triage.is_safe:
+        raise HTTPException(status_code=400, detail="Contraindicated ingredients found.")
+
+    # Step 2: Generation via Gemini 1.5 Flash ($0.38/1kST)
+    return await gemini.generate_structured(request, DiabeticRecipeResponseContract)
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal: Model Swap -->
+  <div class="modal-backdrop" id="modal-swap">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="modal-title-text">Swap Component</h3>
+        <button onclick="closeSwapModal()" style="border:none;background:none;font-size:22px;cursor:pointer;">×</button>
+      </div>
+
+      <table class="modal-table">
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Component</th>
+            <th>Cost / 1k Tasks</th>
+            <th>Latency</th>
+            <th>Pass SLA</th>
+          </tr>
+        </thead>
+        <tbody id="modal-options-body"></tbody>
+      </table>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-secondary" onclick="closeSwapModal()">Cancel</button>
+        <button class="btn-primary" onclick="applySwap()">Apply & Recalculate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Health Condition / Restriction -->
+  <div class="modal-backdrop" id="modal-condition">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-head">
+        <h3>Add Health Condition or Dietary Restriction</h3>
+        <button onclick="closeConditionModal()" style="border:none;background:none;font-size:22px;cursor:pointer;">×</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+        AiStackE2E will compile new Pydantic schema validation rules and ingredient safety checks for this condition.
+      </p>
+
+      <div style="margin-bottom: 16px;">
+        <label style="font-size: 12px; font-weight: 500; color: var(--text-secondary); display: block; margin-bottom: 8px;">Quick Presets:</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button class="preset-chip-btn" type="button" onclick="selectConditionPreset('Hypertension (Low Sodium < 500mg)')">+ Hypertension (Low Sodium)</button>
+          <button class="preset-chip-btn" type="button" onclick="selectConditionPreset('Celiac / Gluten-Free (< 20ppm)')">+ Celiac / Gluten-Free</button>
+          <button class="preset-chip-btn" type="button" onclick="selectConditionPreset('Chronic Kidney Disease (Low Potassium)')">+ Low Potassium (CKD)</button>
+          <button class="preset-chip-btn" type="button" onclick="selectConditionPreset('Dairy-Free (Lactose Intolerant)')">+ Dairy-Free</button>
+          <button class="preset-chip-btn" type="button" onclick="selectConditionPreset('Gout (Low Purine)')">+ Gout (Low Purine)</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="font-size: 12px; font-weight: 500; color: var(--text-secondary); display: block; margin-bottom: 6px;">Or enter custom restriction:</label>
+        <input type="text" id="custom-condition-input" class="google-input" placeholder="e.g. Histamine Intolerance, Peanut Allergy..." style="padding: 10px 12px; font-size: 13px;">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-secondary" onclick="closeConditionModal()">Cancel</button>
+        <button class="btn-primary" onclick="confirmAddCondition()">Add to Contracts</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let currentStep = 0;
+    let selectedPreset = 'support';
+    let currentModel = 'gemini-flash';
+    let currentRouter = 'jev';
+    let typingTimer = null;
+    let activeConditions = ['Type-2 Diabetes (GI \u2264 55)'];
+
+    const presetData = {
+      diabetic: {
+        q1: "Create quick, healthy, tasty fusion meals based on ingredients on hand for an active user managing diabetes.",
+        q2: "Patients managing diabetes or dietary restrictions, and active health-conscious adults.",
+        q3: "Ensure glycemic index <= 55, zero sugar spikes, verify ingredient inventory, return typed JSON.",
+        q4: "provide an Ai enabled customer service experience with a live simulator for tier-1 triage.",
+        prd: `PRODUCT REQUIREMENTS DOCUMENT (PRD)
+=====================================
+Title: Restricted Diet Fusion Recipe Engine
+Version: 1.0.0-MVP (Approved Architecture Specification)
+Author: AiStackE2E Contract Engine
+Target Topology: TypeSafe AI JEV Router + Google Gemini 1.5 Flash + Pydantic v2 Rails
+
+1. Problem Statement:
+Patients managing Type-2 Diabetes and restricted dietary conditions struggle to discover appetizing, rapid-prep fusion recipes using available pantry items without triggering dangerous glycemic spikes (GI > 55) or exceeding household grocery budgets.
+
+2. Target Customer:
+Adults actively managing glycemic health, insulin resistance, or dietary allergies, seeking affordable, clinically compliant meals tailored to available household ingredients.
+
+3. Goal:
+Deliver personalized gourmet fusion recipes verified against clinical nutrition bounds (GI <= 55, net carbs <= 15g, zero added sugars) with real-time price comparisons (Whole Foods vs. Walmart savings) in under 350ms.
+
+4. Job to Be Done (JTBD):
+Given user-specified pantry ingredients and dietary restriction filters, synthesize safe, delicious recipes with photo cards, verifiable nutritional breakdowns, and budget savings in under 350ms.
+
+5. MVP Scope & Architectural Boundaries:
+• Clinical Nutrition Rails: Pydantic v2 DiabeticRecipeResponseContract guaranteeing GI <= 55 validation.
+• Ingredient & Inventory Parser: Fast contraindication evaluation via TypeSafe JEV System-1.
+• Interactive Consumer UI: Dynamic filter tiles (Organic, Budget Friendly, Quick Prep), Whole Foods vs Walmart price comparisons, and modal for adding custom health restrictions.`
+      },
+      support: {
+        q1: "Enterprise customer support triage and automated order inquiry resolution system.",
+        q2: "Customer service agents and enterprise end-users.",
+        q3: "Triage 500k tickets/mo, classify status vs technical, enforce strict ticket response schema.",
+        q4: "provide an Ai enabled customer service experience with a live simulator for tier-1 triage.",
+        prd: `PRODUCT REQUIREMENTS DOCUMENT (PRD)
+=====================================
+Title: Enterprise Customer Support with Super Intelligent Geniuses
+Version: 1.0.0-MVP (Approved Architecture Specification)
+Author: AiStackE2E Contract Engine
+Target Topology: TypeSafe AI JEV Router + Google Gemini 1.5 Flash + Pydantic v2 Rails
+
+1. Problem Statement:
+Enterprise customer support microservices suffer from cascading HTTP 429 rate limit exceptions and cost explosions (up to $18.50/M tokens) when 100% of tier-1 support tickets and status inquiries are indiscriminately routed to heavy autoregressive LLMs (e.g., GPT-4o). During concurrency surges (45 req/sec), P95 latency degrades from 340ms to 1,840ms (+441%), exhausting upstream TPM quotas in under 90 seconds.
+
+2. Target Customer:
+Enterprise Tier-1 Support Operations, DevOps/FinOps Teams, and Mission-Critical Workspace Administrators (e.g., James Miller, Premier 24/7 SLA accounts) managing high-concurrency webhook triage.
+
+3. Goal:
+Eliminate 100% of HTTP 429 throttling errors, restore P95 webhook triage latency to <= 120ms, and slash inference token spend by >= 90% while enforcing a 99.8% Pydantic v2 schema conformance SLA with zero customer payload corruption.
+
+4. Job to Be Done (JTBD):
+When burst concurrency strikes the support webhook (/api/v1/support/triage-webhook), autonomously intercept, validate, and triage 93% of deterministic queries using TypeSafe JEV System-1 routing ($0.042/M tokens), reserving deep reasoning models for complex exceptions, and seamlessly escalate to human specialists when requested.
+
+5. MVP Scope & Architectural Boundaries:
+• System-1 Fast Triage Rail: In-memory deterministic triage bypass with adaptive token bucket buffer.
+• Canonical Contract Rail: Pydantic v2 strict schemas (SupportIncidentTelemetry & IncidentResolutionContract) guaranteeing zero schema drift.
+• Super Intelligent Genius UI: Interactive customer-facing incident dashboard featuring live telemetry auto-population, incident timeline activity audit, AI Chain of Thought diagnosis flowchart, and one-click non-intrusive resolution deployment.`
+      }
+    };
+
+    const modelOptions = {
+      'gemini-flash': { name: 'Google Gemini 1.5 Flash', cost: 0.38, latency: '340 ms', pass: '99.8%', note: 'Recommended (Optimal Cost/Quality)' },
+      'gemini-pro': { name: 'Google Gemini 1.5 Pro', cost: 2.40, latency: '1,120 ms', pass: '99.9%', note: 'High Reasoning' },
+      'gpt-4o': { name: 'OpenAI GPT-4o', cost: 18.50, latency: '1,450 ms', pass: '99.2%', note: 'Legacy Baseline (High Cost)' },
+      'claude-sonnet': { name: 'Claude 3.5 Sonnet', cost: 12.00, latency: '1,380 ms', pass: '99.6%', note: 'High Nuance' }
+    };
+
+    // Animated Typing Simulation (Configurable Speed)
+    function typeTextInto(elementId, text, statusPillId, speed = 24, callback) {
+      const el = document.getElementById(elementId);
+      const pill = statusPillId ? document.getElementById(statusPillId) : null;
+      el.value = '';
+      if (pill) {
+        pill.innerText = speed >= 30 ? '⚡ Typing in slow pace...' : (speed <= 10 ? '⚡ Typing PRD Specification...' : '⚡ Typing Intent...');
+      }
+      
+      let i = 0;
+      if (typingTimer) clearInterval(typingTimer);
+      
+      typingTimer = setInterval(() => {
+        if (i < text.length) {
+          el.value += text.charAt(i);
+          el.scrollTop = el.scrollHeight;
+          i++;
+        } else {
+          clearInterval(typingTimer);
+          if (pill) pill.innerText = '✓ Complete';
+          if (callback) callback();
+        }
+      }, speed);
+    }
+
+    function selectAppChoice(presetKey) {
+      selectedPreset = presetKey;
+      document.getElementById('choice-recipe').classList.toggle('selected', presetKey === 'diabetic');
+      document.getElementById('choice-support').classList.toggle('selected', presetKey === 'support');
+    }
+
+    function goToStep(step) {
+      if (typingTimer) clearInterval(typingTimer);
+      currentStep = step;
+
+      // Always ensure top right "In Prod Deployment" button is hidden during wizard questions
+      const topProdBtn = document.getElementById('btn-toggle-prod');
+      if (topProdBtn) topProdBtn.style.display = 'none';
+
+      // Toggle views
+      document.getElementById('wizard-step-0').style.display = step === 0 ? 'block' : 'none';
+      document.getElementById('wizard-step-1').style.display = step === 1 ? 'block' : 'none';
+      document.getElementById('wizard-step-2').style.display = step === 2 ? 'block' : 'none';
+      document.getElementById('wizard-step-3').style.display = step === 3 ? 'block' : 'none';
+      document.getElementById('wizard-step-4').style.display = step === 4 ? 'block' : 'none';
+      document.getElementById('wizard-step-5').style.display = step === 5 ? 'block' : 'none';
+
+      // Update dots
+      document.getElementById('dot-0').className = step >= 0 ? (step > 0 ? 'step-dot completed' : 'step-dot active') : 'step-dot';
+      document.getElementById('dot-1').className = step >= 1 ? (step > 1 ? 'step-dot completed' : 'step-dot active') : 'step-dot';
+      document.getElementById('dot-2').className = step >= 2 ? (step > 2 ? 'step-dot completed' : 'step-dot active') : 'step-dot';
+      document.getElementById('dot-3').className = step >= 3 ? (step > 3 ? 'step-dot completed' : 'step-dot active') : 'step-dot';
+      document.getElementById('dot-4').className = step >= 4 ? (step > 4 ? 'step-dot completed' : 'step-dot active') : 'step-dot';
+      document.getElementById('dot-5').className = step === 5 ? 'step-dot active' : 'step-dot';
+
+      if (step === 0) {
+        document.getElementById('step-label').innerText = 'Step 1 of 6: Choose Application Template';
+      } else if (step === 1) {
+        document.getElementById('step-label').innerText = 'Step 2 of 6: 1st Q. Natural Language Intent';
+        typeTextInto('q1-input', presetData[selectedPreset].q1, 'typing-pill-1', 24);
+      } else if (step === 2) {
+        document.getElementById('step-label').innerText = 'Step 3 of 6: 2nd Q. Target User Persona';
+        typeTextInto('q2-input', presetData[selectedPreset].q2, 'typing-pill-2', 24);
+      } else if (step === 3) {
+        document.getElementById('step-label').innerText = 'Step 4 of 6: 3rd Q. Architectural Constraints';
+        typeTextInto('q3-input', presetData[selectedPreset].q3, 'typing-pill-3', 24);
+      } else if (step === 4) {
+        document.getElementById('step-label').innerText = 'Step 5 of 6: 4th Q. additional experience, tips ,guidance';
+        typeTextInto('q4-input', presetData[selectedPreset].q4, 'typing-pill-4', 36);
+      } else if (step === 5) {
+        document.getElementById('step-label').innerText = 'Step 6 of 6: Product Requirements Document (PRD)';
+        const fname = document.getElementById('prd-doc-filename');
+        if (fname) {
+          fname.innerText = selectedPreset === 'support' 
+            ? '📄 PRD_Enterprise_Customer_Support_v1.0.md' 
+            : '📄 PRD_Restricted_Diet_Fusion_v1.0.md';
+        }
+        typeTextInto('q5-prd-textarea', presetData[selectedPreset].prd, 'typing-pill-5', 6);
+      }
+    }
+
+    let activeAppView = 'support';
+    let currentCaseId = '00001958';
+
+    function generateUniqueCaseId() {
+      const randDigits = Math.floor(1000 + Math.random() * 9000);
+      const caseId = '0000' + randDigits;
+      currentCaseId = caseId;
+      const idEl = document.getElementById('unique-case-id-text');
+      const bannerEl = document.getElementById('banner-case-num');
+      const inputEl = document.getElementById('case-num-input');
+      const handoffEl = document.getElementById('handoff-case-num');
+      if (idEl) idEl.innerText = `${caseId} | Case`;
+      if (bannerEl) bannerEl.innerText = caseId;
+      if (inputEl) inputEl.value = caseId;
+      if (handoffEl) handoffEl.innerText = caseId;
+      return caseId;
+    }
+
+    function switchRightTab(tabName) {
+      const tabs = ['details', 'activity', 'chatter'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab-btn-' + t);
+        const content = document.getElementById('tab-content-' + t);
+        if (btn) btn.classList.toggle('active', t === tabName);
+        if (content) content.style.display = (t === tabName) ? 'block' : 'none';
+      });
+    }
+
+    function animateDetailsPopulation() {
+      const banner = document.getElementById('populating-banner');
+      const bannerText = document.getElementById('populating-banner-text');
+      const numInput = document.getElementById('case-num-input');
+      const ownerInput = document.getElementById('case-owner-input');
+      const prioSelect = document.getElementById('case-priority-select');
+      const catInput = document.getElementById('case-category-input');
+      const subjInput = document.getElementById('case-subject-input');
+      const descTextarea = document.getElementById('case-desc-textarea');
+      const telemetryBox = document.getElementById('telemetry-box');
+
+      if (banner) {
+        banner.classList.remove('completed');
+        if (bannerText) bannerText.innerHTML = '⚡ <strong>Auto-detecting telemetry stream & populating Case Details for James...</strong>';
+      }
+
+      // Initial clear for visual effect
+      if (descTextarea) descTextarea.value = '';
+      if (subjInput) subjInput.value = '';
+
+      setTimeout(() => {
+        if (numInput) { numInput.value = currentCaseId; numInput.classList.add('field-glow'); }
+        if (ownerInput) { ownerInput.value = 'Super intelligent genius AI (Tier-1)'; ownerInput.classList.add('field-glow'); }
+      }, 250);
+
+      setTimeout(() => {
+        if (prioSelect) prioSelect.classList.add('field-glow');
+        if (catInput) { catInput.value = 'API Rate Limit & Webhook Latency Spike'; catInput.classList.add('field-glow'); }
+      }, 550);
+
+      setTimeout(() => {
+        if (subjInput) {
+          subjInput.value = 'Payment Webhook 429 Rate Limit Throttling during Concurrency Burst';
+          subjInput.classList.add('field-glow');
+        }
+      }, 850);
+
+      setTimeout(() => {
+        if (descTextarea) {
+          descTextarea.value = 'Auto-detected telemetry incident: Customer application experienced 147 HTTP 429 rate limit exceptions over the last 15 minutes. Latency degraded from 340ms to 1,840ms. Upstream LLM provider throttle reached. Zero data loss detected.';
+          descTextarea.classList.add('field-glow');
+        }
+      }, 1150);
+
+      setTimeout(() => {
+        if (telemetryBox) telemetryBox.classList.add('field-glow');
+        if (banner) {
+          banner.classList.add('completed');
+          if (bannerText) bannerText.innerHTML = '✓ <strong>All incident sections auto-populated from live telemetry stream for James Miller</strong> · Ready for review';
+        }
+      }, 1450);
+    }
+
+    function finishWizard() {
+      if (typingTimer) clearInterval(typingTimer);
+      if (selectedPreset === 'support') {
+        generateUniqueCaseId();
+        const appBar = document.querySelector('.app-bar');
+        if (appBar) appBar.style.display = 'none';
+        document.getElementById('view-wizard').style.display = 'none';
+        document.getElementById('view-recipe-app').style.display = 'none';
+        document.getElementById('view-in-prod').style.display = 'none';
+        document.getElementById('view-support-app').style.display = 'block';
+        activeAppView = 'support';
+        switchRightTab('details');
+        animateDetailsPopulation();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const appBar = document.querySelector('.app-bar');
+        if (appBar) appBar.style.display = 'flex';
+        const topProdBtn = document.getElementById('btn-toggle-prod');
+        if (topProdBtn) topProdBtn.style.display = 'inline-flex';
+        document.getElementById('view-wizard').style.display = 'none';
+        document.getElementById('view-support-app').style.display = 'none';
+        document.getElementById('view-in-prod').style.display = 'none';
+        document.getElementById('view-recipe-app').style.display = 'block';
+        activeAppView = 'recipe';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function showSupportApp(reAnimate = false) {
+      const appBar = document.querySelector('.app-bar');
+      if (appBar) appBar.style.display = 'none';
+      document.getElementById('view-wizard').style.display = 'none';
+      document.getElementById('view-recipe-app').style.display = 'none';
+      document.getElementById('view-in-prod').style.display = 'none';
+      document.getElementById('view-support-app').style.display = 'block';
+      activeAppView = 'support';
+      switchRightTab('details');
+      if (reAnimate) animateDetailsPopulation();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showRecipeApp() {
+      // Once in customer support app, do not allow switching to recipe engine
+      if (activeAppView === 'support') {
+        return;
+      }
+      const appBar = document.querySelector('.app-bar');
+      if (appBar) appBar.style.display = 'flex';
+      const topProdBtn = document.getElementById('btn-toggle-prod');
+      if (topProdBtn) topProdBtn.style.display = 'inline-flex';
+      document.getElementById('view-wizard').style.display = 'none';
+      document.getElementById('view-support-app').style.display = 'none';
+      document.getElementById('view-in-prod').style.display = 'none';
+      document.getElementById('view-recipe-app').style.display = 'block';
+      activeAppView = 'recipe';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openProdDeploymentFromSupport() {
+      activeAppView = 'support';
+      const prodView = document.getElementById('view-in-prod');
+      document.getElementById('view-wizard').style.display = 'none';
+      document.getElementById('view-recipe-app').style.display = 'none';
+      document.getElementById('view-support-app').style.display = 'none';
+      prodView.style.display = 'block';
+
+      // Ensure back button routes strictly back to Customer Support
+      const backBtn = document.getElementById('btn-back-from-prod');
+      if (backBtn) {
+        backBtn.innerHTML = '← Back to Customer Support';
+      }
+      const titleSub = document.getElementById('prod-header-subtitle');
+      if (titleSub) {
+        titleSub.innerText = 'Enterprise Customer Support topology, JEV triage routing, and Pydantic v2 contracts.';
+      }
+
+      updateProdViewForFlow('support');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openProdDeploymentFromRecipe() {
+      activeAppView = 'recipe';
+      const prodView = document.getElementById('view-in-prod');
+      document.getElementById('view-wizard').style.display = 'none';
+      document.getElementById('view-support-app').style.display = 'none';
+      document.getElementById('view-recipe-app').style.display = 'none';
+      prodView.style.display = 'block';
+
+      // Ensure back button routes strictly back to Recipe App
+      const backBtn = document.getElementById('btn-back-from-prod');
+      if (backBtn) {
+        backBtn.innerHTML = '← Back to Consumer App';
+      }
+      const titleSub = document.getElementById('prod-header-subtitle');
+      if (titleSub) {
+        titleSub.innerText = 'Real-time production topology, Pydantic contracts, and normalized unit economics.';
+      }
+
+      updateProdViewForFlow('recipe');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function returnFromProdDeployment() {
+      if (activeAppView === 'support') {
+        showSupportApp(false);
+      } else {
+        showRecipeApp();
+      }
+    }
+
+    function toggleProdDeployment() {
+      const prodView = document.getElementById('view-in-prod');
+      if (prodView.style.display === 'block') {
+        returnFromProdDeployment();
+      } else {
+        if (activeAppView === 'support') {
+          openProdDeploymentFromSupport();
+        } else {
+          openProdDeploymentFromRecipe();
+        }
+      }
+    }
+
+    function updateProdViewForFlow(flow) {
+      const pydanticBox = document.getElementById('cake-pydantic-code');
+      const scaffoldBox = document.getElementById('cake-scaffold-code');
+      const layer1Desc = document.getElementById('cake-layer1-desc');
+      const layer2Tag = document.getElementById('tag-router');
+      const layer2Cost = document.getElementById('cost-router-val');
+      const layer3Desc = document.getElementById('cake-layer3-desc');
+      const layer4Desc = document.getElementById('cake-layer4-desc');
+      const layer5Desc = document.getElementById('cake-layer5-desc');
+
+      if (flow === 'support') {
+        if (layer1Desc) layer1Desc.innerText = 'Async POST /api/v1/support/triage-webhook';
+        if (layer2Tag) layer2Tag.innerText = 'TypeSafe AI JEV ($0.042/M)';
+        if (layer2Cost) layer2Cost.innerText = '$0.003 / 1k (93% bypass)';
+        if (layer3Desc) layer3Desc.innerText = 'Tier-2 Autonomous Escalation with Deep Reasoning';
+        if (layer4Desc) layer4Desc.innerText = 'IncidentTelemetry & ResolutionContract (Pydantic v2)';
+        if (layer5Desc) layer5Desc.innerText = 'PostgreSQL pgvector / Enterprise SLA Context & Logs';
+
+        if (pydanticBox) {
+          pydanticBox.innerText = `from pydantic import BaseModel, Field, constr
+from typing import List, Literal, Optional
+
+class SupportIncidentTelemetry(BaseModel):
+    case_id: str = Field(..., description="Unique enterprise case identifier")
+    contact_name: str = "James Miller"
+    impacted_microservice: str = "/api/v1/support/triage-webhook"
+    detected_anomaly: str = "147 HTTP 429 RateLimitError (TPM exceeded)"
+    rate_limit_exceeded: bool = True
+    p95_latency_ms: int = 1840
+
+class IncidentResolutionContract(BaseModel):
+    case_id: str
+    remediation_status: Literal["RESOLVED", "ESCALATED"] = "RESOLVED"
+    bypass_engine: Literal["TypeSafe_JEV_System1", "LLM_Tier2"] = "TypeSafe_JEV_System1"
+    cost_per_million_tokens: float = 0.042
+    p95_latency_ms: int = Field(default=120, le=340)
+    schema_conformance_pass: bool = True
+    zero_downtime_guaranteed: bool = True`;
+        }
+
+        if (scaffoldBox) {
+          scaffoldBox.innerText = `from fastapi import FastAPI, HTTPException
+from app.contracts import SupportIncidentTelemetry, IncidentResolutionContract
+from app.adapters.jev_router import JEVDecisionRouter
+
+app = FastAPI(title="Customer Support with Super Intelligent Geniuses")
+jev = JEVDecisionRouter()
+
+@app.post("/api/v1/support/triage-webhook", response_model=IncidentResolutionContract)
+async def triage_webhook(payload: SupportIncidentTelemetry):
+    # Step 1: System-1 Fast Triage via JEV ($0.042/M tokens, 120ms latency)
+    triage = await jev.triage_tier1(payload)
+    if triage.is_deterministic:
+        return IncidentResolutionContract(
+            case_id=payload.case_id,
+            remediation_status="RESOLVED",
+            bypass_engine="TypeSafe_JEV_System1",
+            cost_per_million_tokens=0.042,
+            p95_latency_ms=120,
+            schema_conformance_pass=True
+        )
+
+    # Step 2: Tier-2 Deep Reasoning Fallback
+    return await jev.route_to_tier2(payload)`;
+        }
+      } else {
+        // Recipe Flow
+        if (layer1Desc) layer1Desc.innerText = 'Type-safe asynchronous REST endpoint';
+        if (layer2Tag) layer2Tag.innerText = 'TypeSafe AI JEV ($0.042/M)';
+        if (layer2Cost) layer2Cost.innerText = '$0.03 / 1k';
+        if (layer3Desc) layer3Desc.innerText = 'Structured generation with clinical nutrition nuance';
+        if (layer4Desc) layer4Desc.innerText = 'Input/Output schemas and clinical boundary validation';
+        if (layer5Desc) layer5Desc.innerText = 'Pantry inventory & glycemic index lookup';
+
+        if (pydanticBox) {
+          pydanticBox.innerText = `from pydantic import BaseModel, Field, conint, confloat, constr
+from typing import List, Literal
+
+class NutritionalBreakdown(BaseModel):
+    calories: conint(ge=50, le=2000)
+    protein_grams: confloat(ge=0.0)
+    carbohydrates_grams: confloat(ge=0.0)
+    fiber_grams: confloat(ge=0.0)
+    net_carbs_grams: confloat(ge=0.0)
+    glycemic_index_estimate: conint(ge=0, le=100) = Field(
+        ..., description="Must be <= 55 for diabetic safety."
+    )
+
+class DiabeticRecipeResponseContract(BaseModel):
+    recipe_id: str
+    title: constr(min_length=5, max_length=120)
+    cuisine_fusion: str
+    preparation_time_minutes: conint(ge=5, le=180)
+    nutrition: NutritionalBreakdown
+    clinical_safety_verified: bool = Field(
+        ..., description="Affirmation that recipe meets diabetic nutritional bounds."
+    )`;
+        }
+
+        if (scaffoldBox) {
+          scaffoldBox.innerText = `from fastapi import FastAPI, HTTPException
+from app.contracts import DiabeticRecipeResponseContract, RecipeRequestContract
+from app.adapters.gemini_adapter import GeminiFlashAdapter
+from app.adapters.jev_router import JEVDecisionRouter
+
+app = FastAPI(title="Restricted Diet Fusion Recipe Service")
+gemini = GeminiFlashAdapter()
+jev = JEVDecisionRouter()
+
+@app.post("/v1/recipes/generate", response_model=DiabeticRecipeResponseContract)
+async def generate_recipe(request: RecipeRequestContract):
+    # Step 1: System-1 Fast Triage via JEV ($0.042/M tokens, 120ms)
+    triage = await jev.evaluate_contraindications(request.ingredients_on_hand)
+    if not triage.is_safe:
+        raise HTTPException(status_code=400, detail="Contraindicated ingredients found.")
+
+    # Step 2: Generation via Gemini 1.5 Flash ($0.38/1kST)
+    return await gemini.generate_structured(request, DiabeticRecipeResponseContract)`;
+        }
+      }
+    }
+
+    function tryRecommendations() {
+      const panel = document.getElementById('af-recommendations-panel');
+      if (panel) {
+        panel.style.display = 'block';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function applyResolution() {
+      // 1. Disable the apply resolution button
+      const applyBtn = document.getElementById('btn-apply-resolution-now') || document.querySelector('.btn-apply-resolution');
+      if (applyBtn) {
+        applyBtn.disabled = true;
+        applyBtn.innerHTML = '<span>✓ Resolution Active & Deployed</span>';
+        applyBtn.style.opacity = '0.65';
+        applyBtn.style.cursor = 'not-allowed';
+        applyBtn.style.pointerEvents = 'none';
+        applyBtn.style.background = '#137333';
+      }
+
+      // 2. Update chevron path
+      const pInv = document.getElementById('path-investigation');
+      const pProc = document.getElementById('path-proceeding');
+      const pRes = document.getElementById('path-resolution');
+      if (pInv) {
+        pInv.className = 'path-step completed';
+        pInv.innerHTML = '<span>✓ Investigation</span>';
+      }
+      if (pProc) {
+        pProc.className = 'path-step completed';
+        pProc.innerHTML = '<span>✓ Proceeding</span>';
+      }
+      if (pRes) {
+        pRes.className = 'path-step completed';
+        pRes.innerHTML = '<span>✓ Resolution (Applied)</span>';
+      }
+
+      // 3. Update Status
+      const statusText = document.getElementById('banner-status-text');
+      if (statusText) {
+        statusText.innerText = 'Resolved (JEV & Pydantic Active)';
+        statusText.style.color = '#027a48';
+      }
+      const statusSelect = document.getElementById('case-status-select');
+      if (statusSelect) statusSelect.value = 'Resolved';
+
+      // 4. Update Activity timeline
+      const actResolved = document.getElementById('activity-entry-resolved');
+      if (actResolved) actResolved.style.display = 'flex';
+
+      // 5. Append Success Bubble with Root Cause Analysis (RCA)
+      const chatContainer = document.getElementById('af-chat-container');
+      if (chatContainer) {
+        const successBubble = document.createElement('div');
+        successBubble.className = 'af-bubble-agent';
+        successBubble.innerHTML = `
+          <div class="af-greeting-title" style="color: #027a48;">
+            <span>✅</span>
+            <span>Resolution Deployed Successfully</span>
+          </div>
+          <p style="color: #181818; font-size: 13px; line-height: 1.5; margin-bottom: 8px;">
+            Non-intrusive recommendations have been applied to production webhook contracts. <strong>TypeSafe JEV System-1 triage bypass</strong> is actively absorbing 93% of ticket volume ($0.042/M tokens).
+          </p>
+
+          <!-- Root Cause Analysis (RCA) Card -->
+          <div class="rca-card">
+            <div class="rca-header">
+              <div class="rca-title"><span>🔍</span> <span>Root Cause Analysis (RCA) & Incident Resolution Report</span></div>
+              <span class="rca-pill">✓ Remediation Complete</span>
+            </div>
+            
+            <div class="rca-grid">
+              <div class="rca-block">
+                <div class="rca-block-head" style="color: #c5221f;"><span>⚠️</span> What was the issue?</div>
+                <div class="rca-block-desc">
+                  147 HTTP 429 (Too Many Requests) errors on <code>/api/v1/support/triage-webhook</code> during a 45 req/sec concurrency spike. P95 latency degraded from 340ms to 1,840ms (+441%).
+                </div>
+              </div>
+
+              <div class="rca-block">
+                <div class="rca-block-head" style="color: #032d60;"><span>🔎</span> What was the Root Cause?</div>
+                <div class="rca-block-desc">
+                  100% of incoming tickets were routed indiscriminately to heavy autoregressive LLMs (OpenAI GPT-4o at $18.50/M tokens). Upstream TPM quota exhausted in under 90s without deterministic triage.
+                </div>
+              </div>
+
+              <div class="rca-block" style="grid-column: 1 / -1; background: #f0fdf4; border-color: #bbf7d0;">
+                <div class="rca-block-head" style="color: #166534;"><span>🛠️</span> How was it resolved?</div>
+                <div class="rca-block-desc">
+                  <strong>1. TypeSafe JEV System-1 Triage:</strong> Diverted 93% of deterministic tier-1 queries to JEV ($0.042/M tokens, 120ms latency), slashing upstream token burn by 93%.<br>
+                  <strong>2. Adaptive Token Bucket Rate Limiter:</strong> Implemented concurrency buffer with local cache for duplicate idempotency keys without dropping transactions.<br>
+                  <strong>3. Pydantic v2 Contract Guard:</strong> Webhook payloads validated against strict schema. Zero code refactor, zero downtime.
+                </div>
+              </div>
+            </div>
+
+            <div class="rca-metrics-strip">
+              <div class="rca-metric-item">
+                <div class="m-lbl">Current Error Rate</div>
+                <div class="m-val">0.00%</div>
+              </div>
+              <div class="rca-metric-item">
+                <div class="m-lbl">P95 Latency</div>
+                <div class="m-val">120 ms (restored)</div>
+              </div>
+              <div class="rca-metric-item">
+                <div class="m-lbl">Inference Spend</div>
+                <div class="m-val">-93% ($0.03 / 1k)</div>
+              </div>
+            </div>
+          </div>
+        `;
+        chatContainer.appendChild(successBubble);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }
+
+    function continueToHumanLoop() {
+      const alertBox = document.getElementById('af-human-alert');
+      if (alertBox) alertBox.style.display = 'block';
+
+      const statusText = document.getElementById('banner-status-text');
+      if (statusText) {
+        statusText.innerText = 'Escalated to Human Specialist';
+        statusText.style.color = '#b25e00';
+      }
+      const statusSelect = document.getElementById('case-status-select');
+      if (statusSelect) statusSelect.value = 'Escalated';
+
+      const chatContainer = document.getElementById('af-chat-container');
+      if (chatContainer) {
+        const handoffBubble = document.createElement('div');
+        handoffBubble.className = 'af-bubble-agent';
+        handoffBubble.innerHTML = `
+          <div class="af-greeting-title" style="color: #b25e00;">
+            <span>👤</span>
+            <span>Human Representative Assigned</span>
+          </div>
+          <p style="color: #181818; font-size: 13px; line-height: 1.5; margin-bottom: 8px;">
+            Senior Support Architect <strong>Sarah Chen</strong> has joined Case #${currentCaseId}. Complete diagnostic context, telemetry logs, and contract validation errors were transferred.
+          </p>
+          <div style="background: #fff8e6; border: 1px solid #ffd066; border-radius: 4px; padding: 8px 12px; font-size: 12px; color: #8a4b00;">
+            💬 <em>"Hello James, I am reviewing the 147 HTTP 429 traces now. I am online with you."</em>
+          </div>
+        `;
+        chatContainer.appendChild(handoffBubble);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }
+
+    function toggleFollow() {
+      const btn = document.getElementById('btn-follow-toggle');
+      if (btn) {
+        if (btn.innerText.includes('+ Follow')) {
+          btn.innerHTML = '<span>✓ Following</span>';
+          btn.style.background = '#eef4ff';
+        } else {
+          btn.innerHTML = '<span>+ Follow</span>';
+          btn.style.background = '#ffffff';
+        }
+      }
+    }
+
+    function focusSupportChat() {
+      const inp = document.getElementById('af-chat-input-field');
+      if (inp) {
+        inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        inp.focus();
+      }
+    }
+    const focusAgentforce = focusSupportChat;
+
+    function sendAfChat() {
+      const input = document.getElementById('af-chat-input-field');
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) return;
+      
+      const chatContainer = document.getElementById('af-chat-container');
+      const userBubble = document.createElement('div');
+      userBubble.className = 'af-bubble-user';
+      userBubble.innerText = text;
+      chatContainer.appendChild(userBubble);
+      input.value = '';
+
+      setTimeout(() => {
+        const agentBubble = document.createElement('div');
+        agentBubble.className = 'af-bubble-agent';
+        agentBubble.innerHTML = `
+          <div class="af-greeting-title">
+            <span>🧠</span>
+            <span>Customer Support with Super intelligent geniuses Response</span>
+          </div>
+          <p style="color: #181818; font-size: 13px; line-height: 1.5;">
+            I have analyzed: <em>"${text}"</em>. All diagnostic telemetry checks out and Pydantic v2 contract integrity is active. Press <strong>"Yes, try proposed recommendations"</strong> to execute non-intrusive triage routing.
+          </p>
+        `;
+        chatContainer.appendChild(agentBubble);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 400);
+    }
+
+    function toggleGenericTile(el) {
+      el.classList.toggle('selected');
+    }
+
+    // Dynamic Budget Friendly Toggle Handler
+    function toggleBudgetTile(el) {
+      el.classList.toggle('selected');
+      const isBudgetActive = el.classList.contains('selected');
+      const banner = document.getElementById('budget-savings-banner');
+      const salmonPricing = document.getElementById('salmon-pricing-box');
+      const badgesContainer = document.getElementById('recipe-badges-container');
+
+      if (isBudgetActive) {
+        // Show Budget Savings Banner
+        banner.style.display = 'block';
+
+        // Update Salmon Price with comparison & Walmart link
+        salmonPricing.innerHTML = `
+          <a href="https://www.wholefoodsmarket.com" target="_blank" class="store-tag wholefoods-tag" style="text-decoration: line-through; opacity: 0.7;">Whole Foods: $8.99</a>
+          <span style="color: #5f6368; font-size: 11px; margin: 0 4px;">→</span>
+          <a href="https://www.walmart.com/browse/food/fresh-seafood/976759_9569502" target="_blank" class="store-tag walmart-tag">Walmart: $3.29</a>
+          <a href="https://www.walmart.com" target="_blank" class="tiny-walmart-link">(walmart.com)</a>
+        `;
+
+        // Add Budget Badge
+        if (!document.getElementById('badge-budget-tag')) {
+          const badge = document.createElement('span');
+          badge.id = 'badge-budget-tag';
+          badge.className = 'badge-pill badge-budget';
+          badge.innerText = '💰 Budget Friendly: $5.17 Meal';
+          badgesContainer.appendChild(badge);
+        }
+      } else {
+        // Hide Budget Savings Banner
+        banner.style.display = 'none';
+
+        // Revert Salmon Price to default Whole Foods
+        salmonPricing.innerHTML = `
+          <a href="https://www.wholefoodsmarket.com" target="_blank" class="store-tag wholefoods-tag">Whole Foods: $8.99</a>
+        `;
+
+        // Remove Budget Badge
+        const b = document.getElementById('badge-budget-tag');
+        if (b) b.remove();
+      }
+    }
+
+    function regenerateRecipe() {
+      const btn = document.querySelector('.btn-generate-recipe');
+      btn.innerHTML = '<span>⏳ Validating with Gemini Flash...</span>';
+      setTimeout(() => {
+        btn.innerHTML = '<span>✨ Find & Verify Recipes</span>';
+        alert('Recipe updated & verified against Pydantic contract! Glycemic index verified <= 55.');
+      }, 450);
+    }
+
+    // Health Condition Modal Handlers
+    function openConditionModal() {
+      document.getElementById('custom-condition-input').value = '';
+      document.getElementById('modal-condition').classList.add('open');
+    }
+
+    function closeConditionModal() {
+      document.getElementById('modal-condition').classList.remove('open');
+    }
+
+    function selectConditionPreset(presetText) {
+      document.getElementById('custom-condition-input').value = presetText;
+    }
+
+    function confirmAddCondition() {
+      const val = document.getElementById('custom-condition-input').value.trim();
+      if (val) {
+        if (!activeConditions.includes(val)) {
+          activeConditions.push(val);
+          renderActiveConditions();
+          
+          // Add contract badge to recipe card
+          const badgesContainer = document.getElementById('recipe-badges-container');
+          const badge = document.createElement('span');
+          badge.className = 'badge-pill badge-safe';
+          badge.innerText = `✓ ${val.split('(')[0].trim()}: Compliant`;
+          badgesContainer.appendChild(badge);
+        }
+      }
+      closeConditionModal();
+    }
+
+    function removeCondition(condText) {
+      activeConditions = activeConditions.filter(c => c !== condText);
+      renderActiveConditions();
+    }
+
+    function renderActiveConditions() {
+      const wrapper = document.getElementById('active-conditions-wrapper');
+      wrapper.innerHTML = '';
+      activeConditions.forEach(cond => {
+        const chip = document.createElement('span');
+        chip.className = 'condition-chip';
+        chip.innerHTML = `${cond} <span class="remove-cond" onclick="removeCondition('${cond}')">×</span>`;
+        wrapper.appendChild(chip);
+      });
+    }
+
+    // Modal
+    function openSwapModal(layer) {
+      const modal = document.getElementById('modal-swap');
+      const tbody = document.getElementById('modal-options-body');
+      tbody.innerHTML = '';
+
+      if (layer === 'model') {
+        document.getElementById('modal-title-text').innerText = 'Swap Foundation Reasoning Model';
+        for (const [key, val] of Object.entries(modelOptions)) {
+          const checked = key === currentModel ? 'checked' : '';
+          tbody.innerHTML += `
+            <tr>
+              <td><input type="radio" name="model-opt" value="${key}" ${checked}></td>
+              <td><strong>${val.name}</strong><br><small style="color:var(--text-secondary)">${val.note}</small></td>
+              <td style="color:var(--google-green);font-family:monospace;font-weight:600;">$${val.cost.toFixed(2)}</td>
+              <td>${val.latency}</td>
+              <td>${val.pass}</td>
+            </tr>
+          `;
+        }
+      } else {
+        document.getElementById('modal-title-text').innerText = `Inspect ${layer.toUpperCase()} Layer`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);">Current selection is default optimal component for this template.</td></tr>`;
+      }
+      modal.classList.add('open');
+    }
+
+    function closeSwapModal() {
+      document.getElementById('modal-swap').classList.remove('open');
+    }
+
+    function applySwap() {
+      const sel = document.querySelector('input[name="model-opt"]:checked');
+      if (sel) {
+        currentModel = sel.value;
+        const m = modelOptions[currentModel];
+        document.getElementById('tag-model').innerText = m.name;
+        document.getElementById('cost-model-val').innerText = `$${m.cost.toFixed(2)} / 1k`;
+        const total = (0.12 + 0.03 + m.cost + 0.24).toFixed(2);
+        document.getElementById('hud-unit-cost').innerText = `$${total} / 1kST`;
+        document.getElementById('hud-latency-val').innerText = m.latency;
+      }
+      closeSwapModal();
+    }
+
+    function switchCakeTab(tabId) {
+      document.querySelectorAll('.tab-link').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+      event.target.classList.add('active');
+      document.getElementById(tabId).style.display = 'block';
+    }
+
+    function runRegressionTests() {
+      const log = document.getElementById('eval-log');
+      const btn = document.getElementById('btn-run-evals');
+      btn.disabled = true;
+      btn.innerText = 'Testing...';
+      log.innerHTML = '[INITIALIZING] Synthesizing 20 Pydantic boundary test payloads...\n';
+      
+      let step = 0;
+      const interval = setInterval(() => {
+        step++;
+        log.innerHTML += `[CASE ${String(step).padStart(2, '0')}/20] Asserting GI <= 55, net_carbs > 0, zero sugar... ✅ PASS (320ms)\n`;
+        log.scrollTop = log.scrollHeight;
+        if (step >= 20) {
+          clearInterval(interval);
+          log.innerHTML += `\n[VERDICT] 100% Schema Conformance (20/20 Passed). Zero contract breaches.\n[FINOPS] Tested unit cost: $${modelOptions[currentModel].cost.toFixed(2)}/1k tasks. Ready to deploy!`;
+          btn.disabled = false;
+          btn.innerText = '▶ Re-run 20 Tests';
+        }
+      }, 70);
+    }
+  </script>
+</body>
+</html>

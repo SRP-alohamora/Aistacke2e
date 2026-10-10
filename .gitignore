@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+# Local secrets
+.env

@@ -1,0 +1,18 @@
+# Offline fixture behaviour per model. ILLUSTRATIVE ERROR RATES, NOT MEASURED.
+# They exist only so the demo UI can show differing verdicts without API keys.
+# Any evidence produced with these profiles is stamped simulated: true and shown with a SIMULATED banner.
+sonnet-5-5:
+  carb_error_sd: 0.08
+  exclusion_violation_rate: 0.0
+  schema_error_rate: 0.0
+  latency_ms: 4200
+haiku-5-5:
+  carb_error_sd: 0.35
+  exclusion_violation_rate: 0.35
+  schema_error_rate: 0.10
+  latency_ms: 1300
+gpt-6-1-sol:
+  carb_error_sd: 0.10
+  exclusion_violation_rate: 0.0
+  schema_error_rate: 0.0
+  latency_ms: 3800

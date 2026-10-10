@@ -1,0 +1,192 @@
+[
+  {
+    "slug": "burrito-bowl",
+    "query": "burrito bowl",
+    "tags": [
+      "mexican",
+      "black beans (cooked)",
+      "corn tortilla",
+      "salsa",
+      "avocado",
+      "chicken breast"
+    ],
+    "title": "File:Steak burrito bowl at La Casa Restaurant in Sonoma, California - Sarah Stierch 03.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Steak_burrito_bowl_at_La_Casa_Restaurant_in_Sonoma,_California_-_Sarah_Stierch_03.jpg",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "artist": "Missvain",
+    "file": "/static/photos/burrito-bowl.jpg"
+  },
+  {
+    "slug": "bibimbap",
+    "query": "bibimbap",
+    "tags": [
+      "korean",
+      "kimchi",
+      "gochujang",
+      "eggs",
+      "spinach",
+      "white rice (cooked)"
+    ],
+    "title": "File:Bibimbap 7.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Bibimbap_7.jpg",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "artist": "Chloe Lim",
+    "file": "/static/photos/bibimbap.jpg"
+  },
+  {
+    "slug": "poke-bowl",
+    "query": "poke bowl salmon",
+    "tags": [
+      "japanese",
+      "salmon",
+      "edamame",
+      "brown rice (cooked)",
+      "cucumber",
+      "avocado"
+    ],
+    "title": "File:Salmon Poke Bowl (S) with Spicy mayo sauce - Kitokito.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Salmon_Poke_Bowl_(S)_with_Spicy_mayo_sauce_-_Kitokito.jpg",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "artist": "Andy Li",
+    "file": "/static/photos/poke-bowl.jpg"
+  },
+  {
+    "slug": "thai-noodles",
+    "query": "pad thai shrimp",
+    "tags": [
+      "thai",
+      "rice noodles (cooked)",
+      "shrimp",
+      "peanuts",
+      "lime juice"
+    ],
+    "title": "File:Shrimp Pad Thai 2026-09-11 classic 02.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Shrimp_Pad_Thai_2026-09-11_classic_02.jpg",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "artist": "P1898",
+    "file": "/static/photos/thai-noodles.jpg"
+  },
+  {
+    "slug": "palak-paneer",
+    "query": "palak paneer",
+    "tags": [
+      "indian",
+      "paneer",
+      "spinach",
+      "naan"
+    ],
+    "title": "File:Palak Paneer curry on plate.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Palak_Paneer_curry_on_plate.jpg",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "artist": "Daniel Zemans",
+    "file": "/static/photos/palak-paneer.jpg"
+  },
+  {
+    "slug": "chana-masala",
+    "query": "chana masala",
+    "tags": [
+      "indian",
+      "chickpeas (cooked)",
+      "tomato",
+      "onion"
+    ],
+    "title": "File:Chana Masala - Mohammed - Spice Of Life 2024-05-27.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Chana_Masala_-_Mohammed_-_Spice_Of_Life_2024-05-27.jpg",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "artist": "Andy Li",
+    "file": "/static/photos/chana-masala.jpg"
+  },
+  {
+    "slug": "quinoa-salad",
+    "query": "quinoa salad bowl",
+    "tags": [
+      "mediterranean",
+      "quinoa (cooked)",
+      "feta",
+      "cucumber",
+      "tomato"
+    ],
+    "title": "File:Healthy quinoa salad with dried fruit.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Healthy_quinoa_salad_with_dried_fruit.jpg",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "artist": "TorbeyCharbel",
+    "file": "/static/photos/quinoa-salad.jpg"
+  },
+  {
+    "slug": "tofu-bowl",
+    "query": "tofu rice bowl vegetables",
+    "tags": [
+      "firm tofu",
+      "broccoli",
+      "brown rice (cooked)",
+      "korean",
+      "japanese"
+    ],
+    "title": "File:Kenny's Mum's \u64c2\u8336\u996d Lei Cha Rice (1576303537).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Kenny%27s_Mum%27s_%E6%93%82%E8%8C%B6%E9%A5%AD_Lei_Cha_Rice_(1576303537).jpg",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "artist": "Alpha from Melbourne, Australia",
+    "file": "/static/photos/tofu-bowl.jpg"
+  },
+  {
+    "slug": "sweet-potato-bowl",
+    "query": "sweet potato bowl",
+    "tags": [
+      "american",
+      "sweet potato (baked)",
+      "ground turkey",
+      "broccoli"
+    ],
+    "title": "File:Sweet potato fries bowl (44260849040).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Sweet_potato_fries_bowl_(44260849040).jpg",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "artist": "Ella Olsson from Stockholm, Sweden",
+    "file": "/static/photos/sweet-potato-bowl.jpg"
+  },
+  {
+    "slug": "tacos",
+    "query": "chicken tacos plate",
+    "tags": [
+      "mexican",
+      "corn tortilla",
+      "chicken breast",
+      "cilantro",
+      "salsa"
+    ],
+    "title": "File:Tacos de Pok Chuk and Chicken Fajitas - Wayan'e, M\u00e9rida, Yucat\u00e1n.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Tacos_de_Pok_Chuk_and_Chicken_Fajitas_-_Wayan%27e,_M%C3%A9rida,_Yucat%C3%A1n.jpg",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "artist": "Bernard DUPONT",
+    "file": "/static/photos/tacos.jpg"
+  },
+  {
+    "slug": "buddha-bowl",
+    "query": "buddha bowl",
+    "tags": [
+      "mediterranean",
+      "italian",
+      "american",
+      "chickpeas (cooked)",
+      "quinoa (cooked)",
+      "sweet potato (baked)",
+      "spinach",
+      "hummus"
+    ],
+    "title": "File:BuddhaBowlLot.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:BuddhaBowlLot.jpg",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "artist": "PizzaMan",
+    "file": "/static/photos/buddha-bowl.jpg"
+  }
+]

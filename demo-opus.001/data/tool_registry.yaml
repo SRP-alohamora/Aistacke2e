@@ -1,0 +1,11 @@
+note: Registered tool parameter-schema hashes. Change only after reviewing a tool
+  signature change.
+tools:
+  grocery.budget_options: 52c74d07a086
+  grocery.shopping_estimate: 49f78ab83d44
+  nutrition.adjust_to_target: 7dbcf2d330a3
+  nutrition.boost_for_goals: e39075240a7d
+  nutrition.meal_nutrients: 2796212d24a7
+  photos.choose_photo: 9f4be5e46960
+  retrieval.retrieve: b6e4dd7daa23
+  safety.check_request_text: 273dc0b462f7

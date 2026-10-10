@@ -1,0 +1,52 @@
+# Price catalog for the demo. List prices in USD per 1M tokens.
+# verified_at = the date the source page was read. Re-verify before any external use.
+catalog_version: "2026-10-08"
+models:
+  sonnet-5-5:
+    label: Claude Sonnet 5.5
+    provider: anthropic
+    model_id: claude-sonnet-5-5
+    input: 2.00
+    output: 10.00
+    cache_read: 0.10
+    cache_write: 2.50
+    source: https://claude.com/pricing
+    verified_at: "2026-10-08"
+  haiku-5-5:
+    label: Claude Haiku 5.5
+    provider: anthropic
+    model_id: claude-haiku-5-5
+    input: 0.10        # prompts <= 100K tokens
+    output: 0.50
+    cache_read: 0.01
+    cache_write: 0.125
+    source: https://claude.com/pricing
+    verified_at: "2026-10-08"
+  gpt-6-1-sol:
+    label: OpenAI GPT-6.1 Sol
+    provider: openai
+    model_id: gpt-6.1-sol
+    input: 2.00
+    output: 10.00
+    cache_read: null   # caching discount not verified - priced at full input rate
+    cache_write: null
+    source: https://developers.openai.com/api/docs/pricing
+    verified_at: "2026-10-08"
+baseline: sonnet-5-5
+
+# Template token profile per attempt (RAG template), used until evidence provides measured tokens.
+# Illustrative assumption, not measured.
+template_token_profile:
+  cached_input: 1200
+  uncached_input: 2300
+  output: 700
+  retry_overhead: 0.03
+
+fixed_monthly_usd:   # user-editable defaults, NOT quoted vendor prices
+  managed_postgres: 50
+  identity: 25
+  observability: 10
+
+scenarios:
+  launch: 3000
+  growth: 60000

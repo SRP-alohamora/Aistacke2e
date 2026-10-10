@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AiStackE2E Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- Screen 1: one question at a time ------------------------------------------------>
+<section id="wizard" class="screen">
+  <header class="appbar"><div class="brand">AiStack<b>E2E</b></div><div id="modeChip" class="chip-mode"></div></header>
+  <div class="wizard-wrap">
+    <div class="wizard-card">
+      <div class="steps"><span class="dot" data-s="0"></span><span class="dot" data-s="1"></span><span class="dot" data-s="2"></span><span class="dot" data-s="3"></span><span id="stepLabel" class="step-label">Question 1 of 4</span></div>
+      <h1 id="qText">What do you want to build?</h1>
+      <div id="qHint" class="q-hint hidden">For the demo experience - describes the screens to generate</div>
+      <textarea id="qInput" rows="3" aria-labelledby="qText"></textarea>
+      <div class="wizard-actions">
+        <button id="btnBack" class="btn text">Back</button>
+        <button id="btnNext" class="btn filled">Next</button>
+      </div>
+    </div>
+    <aside class="summary">
+      <div class="summary-title">Your app idea</div>
+      <div class="summary-row" data-s="0"><span class="summary-q">Build</span><span class="summary-a" id="sum0"></span></div>
+      <div class="summary-row" data-s="1"><span class="summary-q">For</span><span class="summary-a" id="sum1"></span></div>
+      <div class="summary-row" data-s="2"><span class="summary-q">Goal</span><span class="summary-a" id="sum2"></span></div>
+      <div class="summary-row" data-s="3"><span class="summary-q">Tips <small>(demo)</small></span><span class="summary-a" id="sum3"></span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- PRD screen ----------------------------------------------------------------------->
+<section id="prdScreen" class="screen hidden">
+  <header class="appbar"><div class="brand">AiStack<b>E2E</b></div><div class="chip-mode">Step 5 · Product requirements</div></header>
+  <div class="prd-wrap">
+    <div class="prd-card">
+      <div class="prd-top"><h1 id="prdTitle">Product requirements document</h1><span class="muted" id="prdStatus">Drafting from your answers…</span></div>
+      <textarea id="prdText" spellcheck="false" aria-label="Product requirements document"></textarea>
+      <div class="wizard-actions">
+        <button id="prdBack" class="btn text">Back</button>
+        <div><button id="prdSkip" class="btn text">Show all</button>
+        <button id="btnGenApp" class="btn filled">Generate application and contracts</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Building ------------------------------------------------------------------------>
+<section id="building" class="screen hidden">
+  <div class="building"><div class="spinner"></div><div>Building your app…</div><div class="muted" id="buildingStep">Choosing the simplest architecture</div></div>
+</section>
+
+<!-- Screen 2: the generated app preview -------------------------------------------->
+<section id="app" class="screen hidden">
+  <header class="appbar">
+    <div class="brand app-brand"><span class="leaf"></span>Fusion Fuel <span class="tag">Preview</span></div>
+    <div class="appbar-right"><span id="modeChip2" class="chip-mode"></span><button id="btnProd" class="btn filled">Analyze in prod deployment</button></div>
+  </header>
+  <div class="app-layout">
+    <aside class="panel">
+      <div class="panel-title">Tune your recipe</div>
+      <div class="hint">Tap a tile to turn it on or off</div>
+      <div class="tiles">
+        <button class="tile" data-pref="organic" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M5 19c7 0 13-5 14-15-8 0-14 4-14 11v4zm0 0 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Organic</span><span class="tile-state"><span class="switch"></span><span class="state-text">Off</span></span></button>
+        <button class="tile" data-pref="budget_friendly" aria-pressed="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.2 0-2.1-.5-2.6-1.3M12 6.5v11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Budget friendly</span><span class="tile-state"><span class="switch"></span><span class="state-text">Off</span></span></button>
+      </div>
+      <label class="field">Enter ingredients available to find select recipes
+        <textarea id="pantry" rows="3" placeholder="e.g. chicken, black beans, spinach"></textarea>
+      </label>
+      <div class="field">Nutrients per meal <span class="hint-inline">Pick one or more goals</span>
+        <div class="goal-tiles" id="goals"></div>
+        <span class="hint-inline" id="goalInfo"></span>
+      </div>
+      <div class="field">Activity
+        <div class="seg" id="activity">
+          <button data-v="pre_workout">Pre-workout</button><button data-v="post_workout" class="on">Post-workout</button><button data-v="rest_day">Rest day</button>
+        </div>
+      </div>
+      <div class="field">Cuisines to fuse <span class="muted">(up to 3)</span>
+        <div class="cuisines" id="cuisines"></div>
+      </div>
+      <button id="btnFind" class="btn filled wide">Find recipe</button>
+      <div class="field">Health conditions &amp; restrictions
+        <div id="restrictions" class="restrictions"></div>
+        <button id="btnAddRestriction" class="btn tonal wide add-btn">+ Add health condition or restriction</button>
+      </div>
+    </aside>
+    <main class="recipe-area">
+      <div id="recipe"></div>
+    </main>
+  </div>
+</section>
+
+<!-- Screen 3: production deployment analysis (layered cake) ------------------------------>
+<section id="prod" class="screen hidden">
+  <header class="appbar">
+    <div class="brand">AiStack<b>E2E</b> <span class="crumb">Production deployment · Fusion Fuel</span></div>
+    <div class="appbar-right"><span id="simChip" class="chip-sim hidden">Simulated evidence</span><button id="btnBackApp" class="btn text">Back to app</button></div>
+  </header>
+  <nav class="tabs" role="tablist">
+    <button class="tab on" role="tab" data-tab="tabArch" aria-selected="true">Architecture</button>
+    <button class="tab" role="tab" data-tab="tabEval" aria-selected="false">Eval Quality</button>
+    <button class="tab" role="tab" data-tab="tabGov" aria-selected="false">GRC (Governance, Risk &amp; Compliance)</button>
+  </nav>
+  <div class="prod-wrap hidden" id="tabEval"></div>
+  <div class="prod-wrap hidden" id="tabGov"></div>
+  <div class="prod-wrap" id="tabArch">
+    <div class="card enterprise-banner">
+      <p>For enterprise-grade <b>quality, resiliency, durability, governance and security at scale</b> - keeping <b>cost sensitivity</b> in perspective - here are the attributes we need to establish or strengthen.</p>
+      <div class="banner-actions">
+        <button id="btnEnterprise" class="btn filled">Enterprise readiness review report</button>
+        <button id="btnEnhancements" class="btn tonal">Enhancements</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Your architecture, layer by layer <span class="muted">· investigate alternatives for each layer</span></div>
+      <div class="table-scroll"><table class="cake" id="cake"></table></div>
+      <div id="total" class="total"></div>
+      <div class="actions">
+        <button id="btnGenerate" class="btn filled">Download app (.zip)</button>
+        <button id="btnYaml" class="btn tonal">View aistack.yaml</button>
+      </div>
+      <pre id="yaml" class="yaml hidden"></pre>
+    </div>
+  </div>
+</section>
+
+<div id="enhModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="enhTitle">
+  <div class="modal-body">
+    <div class="modal-head"><h2 id="enhTitle">Enhancements to consider</h2><button class="btn text" id="enhClose" aria-label="Close">Close</button></div>
+    <div>
+      
+      <div id="questions"></div>
+      <div class="enhance">
+        <label class="field" for="enhanceText">Describe an enhancement</label>
+        <textarea id="enhanceText" rows="3" placeholder="e.g. Connect a CGM so carb targets adapt to current glucose, or turn the recipe into a Walmart shopping list"></textarea>
+        <div class="actions"><button id="btnEnhance" class="btn filled">Generate product requirement updates for this enhancement</button></div>
+        <div id="enhanceOut"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-body">
+    <div class="modal-head"><h2 id="modalTitle">Compare models</h2><button class="btn text" id="modalClose" aria-label="Close">Close</button></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+<script src="/static/art.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/evalq.js"></script>
+<script src="/static/grc.js"></script>
+</body>
+</html>
